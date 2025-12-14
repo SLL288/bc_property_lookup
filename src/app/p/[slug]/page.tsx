@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import LookupClient from "./LookupClient";
 
-type PageProps = {
-  params: { slug: string };
-};
-
 const decodeSlug = (slug: string) => {
   try {
     return decodeURIComponent(slug);
@@ -13,7 +9,11 @@ const decodeSlug = (slug: string) => {
   }
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
   const decoded = decodeSlug(params.slug);
   return {
     title: `${decoded} Property Lookup — zoning link, ALR check, assessment`,
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default function ResultPage({ params }: PageProps) {
+export default function ResultPage({ params }: { params: { slug: string } }) {
   const decoded = decodeSlug(params.slug);
   return <LookupClient slug={decoded} />;
 }
