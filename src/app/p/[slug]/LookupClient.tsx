@@ -151,7 +151,15 @@ export default function LookupClient({ slug }: { slug: string }) {
             zoningLink={null}
             zoning={snapshot.zoning}
             inAlr={snapshot.alr ?? null}
-            alrProv={snapshot.alr !== undefined ? { insideAlr: Boolean(snapshot.alr), status: snapshot.alrStatus, source: "Province of BC" } : null}
+            alrProv={
+              snapshot.alr !== undefined
+                ? {
+                    insideAlr: Boolean(snapshot.alr),
+                    status: snapshot.alrStatus ?? undefined,
+                    source: "Province of BC"
+                  }
+                : null
+            }
             pidInfo={{
               pid: snapshot.pid,
               parcelName: snapshot.parcel?.name,
