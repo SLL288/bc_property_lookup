@@ -12,16 +12,18 @@ const decodeSlug = (slug: string) => {
 export async function generateMetadata({
   params
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const decoded = decodeSlug(params.slug);
+  const { slug } = await params;
+  const decoded = decodeSlug(slug);
   return {
     title: `${decoded} Property Lookup — zoning link, ALR check, assessment`,
     description: `${decoded} property snapshot with zoning links, ALR check, and assessment quick facts.`
   };
 }
 
-export default function ResultPage({ params }: { params: { slug: string } }) {
-  const decoded = decodeSlug(params.slug);
+export default async function ResultPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const decoded = decodeSlug(slug);
   return <LookupClient slug={decoded} />;
 }
