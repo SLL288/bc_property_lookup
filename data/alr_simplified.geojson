@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Sample ALR", "note": "Placeholder geometry" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.80, 49.15],
+          [-122.70, 49.15],
+          [-122.70, 49.10],
+          [-122.80, 49.10],
+          [-122.80, 49.15]
+        ]]
+      }
+    }
+  ]
+}

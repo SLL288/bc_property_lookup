@@ -1,0 +1,47 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Vancouver", "region": "Metro Vancouver", "note": "Placeholder geometry" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-123.155, 49.28],
+          [-123.02, 49.28],
+          [-123.02, 49.22],
+          [-123.155, 49.22],
+          [-123.155, 49.28]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Surrey", "region": "Metro Vancouver", "note": "Placeholder geometry" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.92, 49.22],
+          [-122.69, 49.22],
+          [-122.69, 49.03],
+          [-122.92, 49.03],
+          [-122.92, 49.22]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Burnaby", "region": "Metro Vancouver", "note": "Placeholder geometry" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-123.03, 49.29],
+          [-122.89, 49.29],
+          [-122.89, 49.21],
+          [-123.03, 49.21],
+          [-123.03, 49.29]
+        ]]
+      }
+    }
+  ]
+}
