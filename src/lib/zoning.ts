@@ -49,7 +49,7 @@ type RawAttempt = {
   source: string;
   inSR: string;
   geometry: string;
-  format: "comma" | "json";
+  format?: "comma" | "json";
   raw?: unknown;
   status?: number;
   statusText?: string;
@@ -236,6 +236,7 @@ export async function runZoningQuery(
       console.error("Zoning lookup error", err);
       attempts.push({
         source: targetUrl,
+        format: attempt.format,
         inSR: attempt.inSR,
         geometry: attempt.geometry,
         error: err instanceof Error ? err.message : String(err)
