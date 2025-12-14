@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import LookupClient from "./LookupClient";
 
+export const runtime = "edge";
+
 const decodeSlug = (slug: string) => {
   try {
     return decodeURIComponent(slug);
