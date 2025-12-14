@@ -12,8 +12,9 @@ export async function getPidByPoint(lat: number, lng: number) {
     layerId: 1,
     lat,
     lng,
-    outFields: ["*"],
-    resultRecordCount: 1
+    outFields: ["PID", "PID_FORMATTED", "PID_NUMBER", "PARCEL_NAME", "PARCEL_STATUS", "PARCEL_CLASS"],
+    resultRecordCount: 1,
+    returnGeometry: false
   });
 }
 

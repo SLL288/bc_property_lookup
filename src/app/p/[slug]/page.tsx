@@ -19,8 +19,8 @@ export async function generateMetadata({
   const { slug } = await params;
   const decoded = decodeSlug(slug);
   return {
-    title: `${decoded} Property Lookup — zoning link, ALR check, assessment`,
-    description: `${decoded} property snapshot with zoning links, ALR check, and assessment quick facts.`
+    title: `${decoded} — PID, zoning, ALR check (BC)`,
+    description: `Lookup PID, municipality, zoning code, and ALR status for ${decoded}. Verify via official sources.`
   };
 }
 
