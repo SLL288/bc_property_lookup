@@ -32,6 +32,7 @@ export type ResultCardsProps = {
     land?: number;
     improvement?: number;
   };
+  providerNotes?: string[];
 };
 
 const ALR_MAP_URL =
