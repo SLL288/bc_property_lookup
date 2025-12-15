@@ -11,14 +11,9 @@ function getZone(codeParam: string) {
   return VANCOUVER_ZONES.find((z) => z.code.toUpperCase() === normalized);
 }
 
-export default function Page({ params }: { params: Promise<{ code: string }> }) {
-  // typedRoutes passes params as a Promise in app router with edge runtime
-  const zonePromise = params.then((p) => getZone(p.code));
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  // this component is synchronous; resolve immediately
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const zone = (zonePromise as any) as ReturnType<typeof getZone>;
+export default async function Page({ params }: { params: Promise<{ code: string }> }) {
+  const { code } = await params;
+  const zone = getZone(code);
   if (!zone) return notFound();
 
   return (
