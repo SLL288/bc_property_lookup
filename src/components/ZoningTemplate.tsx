@@ -23,12 +23,12 @@ const familyLine = (z: ZoningItem) => {
 
 const OfficialLinks = ({ zoning }: { zoning: ZoningItem }) => (
   <div className="mt-3 flex flex-col gap-2">
-    <a className="underline text-brand" href={zoning.mapUrl} target="_blank" rel="noreferrer">
+    <a className="underline text-brand w-fit break-words" href={zoning.mapUrl} target="_blank" rel="noreferrer">
       Open official zoning map
     </a>
     {zoning.pdfUrl ? (
       <div className="flex flex-col">
-        <a className="underline text-brand" href={zoning.pdfUrl} target="_blank" rel="noreferrer">
+        <a className="underline text-brand w-fit break-words" href={zoning.pdfUrl} target="_blank" rel="noreferrer">
           Download / read official {zoning.displayCode} schedule
         </a>
         {zoning.pdfPage ? (
@@ -39,12 +39,12 @@ const OfficialLinks = ({ zoning }: { zoning: ZoningItem }) => (
       <span className="text-slate-500 text-sm">District schedule PDF: Not available yet</span>
     )}
     {zoning.bylawUrl && (
-      <a className="underline text-brand" href={zoning.bylawUrl} target="_blank" rel="noreferrer">
+      <a className="underline text-brand w-fit break-words" href={zoning.bylawUrl} target="_blank" rel="noreferrer">
         Zoning bylaw page
       </a>
     )}
     {zoning.hubUrl && (
-      <a className="underline text-brand" href={zoning.hubUrl} target="_blank" rel="noreferrer">
+      <a className="underline text-brand w-fit break-words" href={zoning.hubUrl} target="_blank" rel="noreferrer">
         Document library / hub
       </a>
     )}
