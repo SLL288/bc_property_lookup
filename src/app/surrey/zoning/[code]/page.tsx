@@ -37,5 +37,9 @@ export default async function Page({ params }: { params: Promise<{ code: string 
   const related = manifest.filter(
     (x) => x.code !== zoning.code && (x.family === zoning.family || x.category === zoning.category)
   );
-  return <ZoningTemplate zoning={zoning} city={CITIES.surrey} related={related} />;
+  return (
+    <main className="mx-auto max-w-3xl px-4 py-10">
+      <ZoningTemplate zoning={zoning} city={CITIES.surrey} related={related} />
+    </main>
+  );
 }
