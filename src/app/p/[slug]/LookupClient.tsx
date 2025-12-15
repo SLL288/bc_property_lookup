@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { ResultCards } from "@/components/ResultCards";
 import { MapView } from "@/components/MapView";
@@ -195,19 +196,49 @@ export default function LookupClient({ slug }: { slug: string }) {
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
-      <div className="flex flex-col gap-2">
-        <p className="text-sm uppercase tracking-[0.2em] text-brand-dark">Property snapshot</p>
-        <h1 className="text-3xl font-bold text-gray-900">{snapshot?.address ?? slug}</h1>
-        {snapshot?.coords && (
-          <p className="text-sm text-gray-700">
-            Coordinates: {snapshot.coords.lat?.toFixed(5)}, {snapshot.coords.lon?.toFixed(5)}
-          </p>
-        )}
-        {status && <p className="text-sm text-gray-600">{status}</p>}
-        {cacheHit && <p className="text-xs text-emerald-700">Loaded from local cache</p>}
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <p className="text-sm uppercase tracking-[0.2em] text-brand-dark">Property snapshot</p>
+          <h1 className="text-3xl font-bold text-gray-900">{snapshot?.address ?? slug}</h1>
+          {snapshot?.coords && (
+            <p className="text-sm text-gray-700">
+              Coordinates: {snapshot.coords.lat?.toFixed(5)}, {snapshot.coords.lon?.toFixed(5)}
+            </p>
+          )}
+        </div>
+        <div className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-medium text-gray-800">Lookup progress</p>
+            {cacheHit && <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-700">Cache hit</span>}
+          </div>
+          <div className="grid gap-2 md:grid-cols-5">
+            {["Starting lookup...", "Checking local cache...", "Calling lookup API...", "API failed, running client-side lookup...", "Lookup complete"].map(
+              (label) => {
+                const active = status === label || status.includes(label.split(" ")[0]);
+                return (
+                  <div
+                    key={label}
+                    className={clsx(
+                      "rounded-lg border px-2 py-2 text-xs",
+                      active ? "border-brand bg-brand/5 text-brand-dark" : "border-gray-200 text-gray-600"
+                    )}
+                  >
+                    {label.replace("...", "")}
+                  </div>
+                );
+              }
+            )}
+          </div>
+          {status && <p className="text-xs text-gray-600">{status}</p>}
+        </div>
       </div>
 
-      <SearchBox initialQuery={snapshot?.address ?? slug} />
+      <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
+        <p className="text-sm font-semibold text-gray-900">Search another address</p>
+        <div className="mt-2">
+          <SearchBox initialQuery={snapshot?.address ?? slug} />
+        </div>
+      </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 
@@ -259,7 +290,19 @@ export default function LookupClient({ slug }: { slug: string }) {
         </>
       )}
 
-      {loading && !snapshot && <p className="text-sm text-gray-700">Loading...</p>}
+      {loading && !snapshot && (
+        <div className="grid gap-3 md:grid-cols-2">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="animate-pulse rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+              <div className="h-4 w-1/3 rounded bg-gray-200" />
+              <div className="mt-3 space-y-2">
+                <div className="h-3 w-full rounded bg-gray-100" />
+                <div className="h-3 w-2/3 rounded bg-gray-100" />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {recent.length > 0 && (
         <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">

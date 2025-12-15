@@ -52,6 +52,7 @@ export function ResultCards({
   assessment
 }: ResultCardsProps) {
   const [copied, setCopied] = useState<string | null>(null);
+  const [showDiagnostics, setShowDiagnostics] = useState(false);
 
   const copyText = async (text: string, label: string) => {
     try {
@@ -73,11 +74,22 @@ export function ResultCards({
   return (
     <div className="grid gap-4 md:grid-cols-2">
       <Card title="Jurisdiction">
-        <p className="text-sm text-gray-700">
-          Municipality and ALR checks are scoped to Metro Vancouver for this MVP.
-        </p>
+        {(municipality || jurisdictionBc) ? (
+          <div className="space-y-1 text-sm text-gray-800">
+            {municipality?.name && <p className="font-semibold">Municipality: {municipality.name}</p>}
+            {(municipality?.region || jurisdictionBc?.regionalDistrict) && (
+              <p className="text-gray-700">
+                Regional district: {municipality?.region ?? jurisdictionBc?.regionalDistrict ?? "—"}
+              </p>
+            )}
+            <p className="text-xs text-gray-600">Sources: local boundary detection + Province of BC legal admin boundaries</p>
+          </div>
+        ) : (
+          <p className="text-sm text-gray-700">Jurisdiction not available yet for this lookup.</p>
+        )}
       </Card>
-      <Card title="PID / Parcel (BC)">
+
+      <Card title="Parcel / PID">
         {pidInfo?.pid || pidInfo?.parcelName ? (
           <div className="space-y-1 text-sm text-gray-800">
             {pidInfo.pid && <p className="font-semibold">PID: {pidInfo.pid}</p>}
@@ -88,6 +100,7 @@ export function ResultCards({
         ) : (
           <p className="text-sm text-gray-700">PID not returned for this location.</p>
         )}
+        <p className="mt-2 text-xs text-gray-600">PID identifies the legal parcel; verify details on ParcelMap BC.</p>
         <a
           className="mt-2 inline-flex w-full justify-center rounded-lg border border-gray-200 px-3 py-2 text-sm hover:border-brand"
           href="https://www2.gov.bc.ca/gov/content/industry/crown-land-water/land-use/crown-land/parcels/parcelmap-bc"
@@ -97,27 +110,7 @@ export function ResultCards({
           Open ParcelMap BC info
         </a>
       </Card>
-      <Card title="Municipality">
-        {municipality ? (
-          <div className="space-y-1 text-sm text-gray-800">
-            <p className="font-semibold">{municipality.name}</p>
-            <p className="text-gray-600">Region: {municipality.region ?? "Metro Vancouver"}</p>
-          </div>
-        ) : (
-          <p className="text-sm text-gray-700">Municipality detection not available yet for this location.</p>
-        )}
-      </Card>
-      <Card title="Jurisdiction (BC Gov)">
-        {(jurisdictionBc?.municipality || jurisdictionBc?.regionalDistrict) ? (
-          <div className="space-y-1 text-sm text-gray-800">
-            {jurisdictionBc?.municipality && <p>Municipality: {jurisdictionBc.municipality}</p>}
-            {jurisdictionBc?.regionalDistrict && <p>Regional district: {jurisdictionBc.regionalDistrict}</p>}
-            <p className="text-xs text-gray-600">Source: Province of BC legal admin boundaries</p>
-          </div>
-        ) : (
-          <p className="text-sm text-gray-700">BC jurisdiction lookup not available.</p>
-        )}
-      </Card>
+
       <Card title="Parcel details">
         {zoning?.raw ? (
           <div className="space-y-2 text-sm text-gray-800">
@@ -188,6 +181,12 @@ export function ResultCards({
                 ));
               })()}
             </div>
+            {pidInfo?.pid && !getField(zoning.raw, ["PID", "PID_FORMATTED"]) && (
+              <p className="text-xs text-gray-600">PID from ParcelMap BC: {pidInfo.pid}</p>
+            )}
+            <p className="text-xs text-gray-600">
+              Parcel details are for orientation only. Verify legal description and zoning with the municipality.
+            </p>
           </div>
         ) : (
           <p className="text-sm text-gray-700">Parcel details not available for this lookup.</p>
@@ -252,11 +251,11 @@ export function ResultCards({
               target="_blank"
               rel="noreferrer"
               className="inline-flex w-full justify-center rounded-lg border border-gray-200 px-4 py-2 text-center text-gray-900 hover:border-brand"
-            >
-              View zoning bylaw
-            </a>
-          )}
-          {zoning?.raw && getField(zoning.raw, ["WEBLINK_DOCS"]) && (
+          >
+            View zoning bylaw
+          </a>
+        )}
+        {zoning?.raw && getField(zoning.raw, ["WEBLINK_DOCS"]) && (
             <a
               href={getField(zoning.raw, ["WEBLINK_DOCS"])}
               target="_blank"
@@ -270,8 +269,15 @@ export function ResultCards({
             <p className="text-xs text-gray-500">Source: {zoning.source}</p>
           )}
           {zoning?.raw && (
-            <details className="rounded-lg border border-gray-200 bg-gray-50 p-2 text-xs text-gray-700">
-              <summary className="cursor-pointer font-semibold text-gray-800">Raw zoning record</summary>
+            <details
+              className="rounded-lg border border-gray-200 bg-gray-50 p-2 text-xs text-gray-700"
+              open={showDiagnostics}
+              onToggle={(e) => setShowDiagnostics((e.target as HTMLDetailsElement).open)}
+            >
+              <summary className="cursor-pointer font-semibold text-gray-800">Diagnostics</summary>
+              <p className="mt-1 text-[11px] text-gray-600">
+                Raw provider response and request attempts for troubleshooting.
+              </p>
               <pre className="mt-2 whitespace-pre-wrap break-all text-[11px] leading-tight">
                 {JSON.stringify(zoning.raw, null, 2)}
               </pre>
@@ -326,6 +332,7 @@ export function ResultCards({
             <p className="text-[11px] text-gray-500">Source: {alrProv.source ?? "Province of BC"}</p>
           </div>
         )}
+        <p className="mt-2 text-xs text-gray-600">Always verify with the ALC and the municipality for land-use constraints.</p>
       </Card>
       <Card title="Floodplain mapping (index)">
         {floodplain ? (
