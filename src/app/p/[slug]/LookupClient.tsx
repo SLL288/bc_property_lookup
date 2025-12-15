@@ -90,6 +90,14 @@ const buildDisplaySnapshot = (snap: Snapshot | null): DisplaySnapshot | null => 
     officialMapLink
   };
 };
+const copyText = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    console.error("Copy failed", err);
+  }
+};
+
 const summaryText = (snap: Snapshot | undefined, share: string) => {
   const coords = snap?.coords ? `${snap.coords.lat.toFixed(5)}, ${snap.coords.lon.toFixed(5)}` : "N/A";
   const muni = snap?.municipality ?? "Unknown";
@@ -102,14 +110,6 @@ Municipality: ${muni}
 Zoning: ${zoning}
 Inside ALR: ${alr}
 Link: ${share}`;
-};
-
-const copyText = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch (err) {
-    console.error("Copy failed", err);
-  }
 };
 
 export default function LookupClient({ slug, initialSnapshot }: { slug: string; initialSnapshot?: Snapshot | null }) {
