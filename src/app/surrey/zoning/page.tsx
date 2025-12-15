@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { getManifest } from "../../../../data/zoning";
-import type { ZoningItem } from "../../../../data/zoning/types";
+import { getManifest } from "@/data/zoning";
+import type { ZoningItem } from "@/data/zoning/types";
 
 const familyOrder = ["R", "RM", "RF", "RA", "BYLAW"];
 
