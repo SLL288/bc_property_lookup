@@ -1,41 +1,54 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
-import { BURNABY_RESOURCES, type CityResource } from "../../../../data/burnabyZoningResources";
+import { getManifest } from "../../../../data/zoning";
+import type { ZoningItem } from "../../../../data/zoning/types";
 
-const sortResources = (items: CityResource[]) =>
-  [...items].sort((a, b) => a.title.localeCompare(b.title, "en", { numeric: true }));
+const familyOrder = ["R", "RM", "C", "M", "P", "A", "BYLAW"];
+
+const sortCode = (a: ZoningItem, b: ZoningItem) => {
+  const famA = (a.family ?? a.displayCode.split("-")[0]).toUpperCase();
+  const famB = (b.family ?? b.displayCode.split("-")[0]).toUpperCase();
+  const famIdxA = familyOrder.indexOf(famA) === -1 ? 999 : familyOrder.indexOf(famA);
+  const famIdxB = familyOrder.indexOf(famB) === -1 ? 999 : familyOrder.indexOf(famB);
+  if (famIdxA !== famIdxB) return famIdxA - famIdxB;
+  return a.displayCode.localeCompare(b.displayCode, "en", { numeric: true });
+};
 
 export default function BurnabyZoningIndex() {
+  const manifest = useMemo(() => getManifest("burnaby"), []);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
 
   const categories = useMemo(() => {
-    const s = new Set(BURNABY_RESOURCES.map((r) => r.category).filter(Boolean));
+    const s = new Set(manifest.map((z) => z.category).filter(Boolean));
     return ["All", ...Array.from(s).sort()];
-  }, []);
+  }, [manifest]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return sortResources(
-      BURNABY_RESOURCES.filter((r) => (category === "All" ? true : r.category === category)).filter((r) => {
+    return manifest
+      .filter((z) => (category === "All" ? true : z.category === category))
+      .filter((z) => {
         if (!q) return true;
         return (
-          r.title.toLowerCase().includes(q) ||
-          r.category.toLowerCase().includes(q) ||
-          r.description.toLowerCase().includes(q)
+          z.code.includes(q) ||
+          z.displayCode.toLowerCase().includes(q) ||
+          z.name.toLowerCase().includes(q) ||
+          z.category.toLowerCase().includes(q)
         );
       })
-    );
-  }, [query, category]);
+      .sort(sortCode);
+  }, [query, category, manifest]);
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 space-y-6">
       <header className="space-y-3">
-        <h1 className="text-3xl font-semibold">Burnaby Zoning Resources</h1>
+        <h1 className="text-3xl font-semibold">Burnaby Zoning Codes</h1>
         <p className="text-slate-700">
-          Official City of Burnaby resources for zoning verification: map viewer, bylaws, and development applications.
-          Use these links to confirm zoning districts, bylaws, and permits directly with Burnaby.
+          Official Burnaby zoning district list with links to the City’s zoning map and bylaws. Always verify using the
+          official PDFs and BurnabyMap.
         </p>
       </header>
 
@@ -43,7 +56,7 @@ export default function BurnabyZoningIndex() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search map, bylaw, permits..."
+          placeholder="Search code (e.g., R5) or keyword…"
           className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-brand/60"
         />
         <select
@@ -59,25 +72,23 @@ export default function BurnabyZoningIndex() {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {filtered.map((item) => (
-          <a
-            key={item.title}
-            href={item.url}
-            target="_blank"
-            rel="noreferrer"
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {filtered.map((z) => (
+          <Link
+            key={z.code}
+            href={`/burnaby/zoning/${z.code}`}
             className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
           >
-            <div className="text-sm font-semibold text-emerald-700">{item.category}</div>
-            <div className="mt-1 text-lg font-semibold text-slate-900">{item.title}</div>
-            <p className="mt-1 text-sm text-slate-600">{item.description}</p>
-          </a>
+            <div className="text-sm font-semibold text-emerald-700">{z.displayCode}</div>
+            <div className="mt-1 text-lg font-semibold text-slate-900">{z.name}</div>
+            <div className="mt-1 text-sm text-slate-500">{z.category}</div>
+          </Link>
         ))}
       </div>
 
       <p className="mt-8 text-xs text-slate-500">
-        Sources: City of Burnaby (official map, bylaws, and development resources). Always verify using the official
-        site.
+        Sources: City of Burnaby zoning bylaw and BurnabyMap. This site is informational—always verify using official
+        sources.
       </p>
     </main>
   );

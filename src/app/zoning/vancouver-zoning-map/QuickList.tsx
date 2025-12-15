@@ -1,13 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { VAN_ZONING } from "../../../../data/vancouverZoningManifest";
+import { getManifest } from "../../../../data/zoning";
 
 export function QuickList() {
   const [query, setQuery] = useState("");
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const items = [...VAN_ZONING].sort((a, b) => a.displayCode.localeCompare(b.displayCode, "en", { numeric: true }));
+    const items = getManifest("vancouver").sort((a, b) =>
+      a.displayCode.localeCompare(b.displayCode, "en", { numeric: true })
+    );
     if (!q) return items;
     return items.filter(
       (item) =>

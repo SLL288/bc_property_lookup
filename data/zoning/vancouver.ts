@@ -1,21 +1,11 @@
-export type ZoningItem = {
-  code: string; // lowercase slug
-  displayCode: string;
-  name: string;
-  category: string;
-  family?: string;
-  shortName?: string;
-  pdfUrl?: string | null;
-  mapUrl: string;
-  hubUrl: string;
-  lastVerified?: string;
-};
+import { ZoningItem } from "./types";
 
 const MAP = "https://maps.vancouver.ca/zoning/";
 const HUB = "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx";
 
-export const VAN_ZONING: ZoningItem[] = [
+export const VANCOUVER_ZONING: ZoningItem[] = [
   {
+    city: "vancouver",
     code: "r1-1",
     displayCode: "R1-1",
     name: "Residential Inclusive District",
@@ -26,6 +16,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rt-1",
     displayCode: "RT-1",
     name: "Two-Family Dwelling District",
@@ -36,6 +27,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rt-2",
     displayCode: "RT-2",
     name: "Two-Family Dwelling District",
@@ -46,6 +38,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rt-3",
     displayCode: "RT-3",
     name: "Two-Family Dwelling District",
@@ -56,6 +49,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rt-4",
     displayCode: "RT-4",
     name: "Two-Family Dwelling District",
@@ -66,6 +60,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rt-5",
     displayCode: "RT-5",
     name: "Two-Family Dwelling District",
@@ -76,6 +71,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rt-6",
     displayCode: "RT-6",
     name: "Two-Family Dwelling District",
@@ -86,6 +82,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rt-7",
     displayCode: "RT-7",
     name: "Two-Family Dwelling District",
@@ -96,6 +93,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rt-8",
     displayCode: "RT-8",
     name: "Two-Family Dwelling District",
@@ -106,6 +104,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rt-9",
     displayCode: "RT-9",
     name: "Two-Family Dwelling District",
@@ -116,6 +115,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rt-10",
     displayCode: "RT-10",
     name: "Two-Family Dwelling District",
@@ -126,6 +126,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rt-11",
     displayCode: "RT-11",
     name: "Two-Family Dwelling District",
@@ -136,6 +137,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rm-1",
     displayCode: "RM-1",
     name: "Multiple Dwelling District",
@@ -146,6 +148,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rm-2",
     displayCode: "RM-2",
     name: "Multiple Dwelling District",
@@ -156,6 +159,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rm-3",
     displayCode: "RM-3",
     name: "Multiple Dwelling District",
@@ -166,6 +170,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rm-4",
     displayCode: "RM-4",
     name: "Multiple Dwelling District",
@@ -176,6 +181,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rm-5",
     displayCode: "RM-5",
     name: "Multiple Dwelling District",
@@ -186,6 +192,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rm-6",
     displayCode: "RM-6",
     name: "Multiple Dwelling District",
@@ -196,6 +203,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "c-1",
     displayCode: "C-1",
     name: "Commercial District",
@@ -206,6 +214,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "c-2",
     displayCode: "C-2",
     name: "Commercial District",
@@ -216,6 +225,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "fc-1",
     displayCode: "FC-1",
     name: "False Creek District",
@@ -226,6 +236,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rr-1",
     displayCode: "RR-1",
     name: "Residential Rental District",
@@ -236,6 +247,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "rr-2a",
     displayCode: "RR-2A",
     name: "Residential Rental District",
@@ -246,6 +258,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "i-1",
     displayCode: "I-1",
     name: "Industrial District",
@@ -256,6 +269,7 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   },
   {
+    city: "vancouver",
     code: "i-2",
     displayCode: "I-2",
     name: "Industrial District",
@@ -266,7 +280,3 @@ export const VAN_ZONING: ZoningItem[] = [
     hubUrl: HUB
   }
 ];
-
-export function getZoning(code: string) {
-  return VAN_ZONING.find((z) => z.code === code.toLowerCase()) ?? null;
-}

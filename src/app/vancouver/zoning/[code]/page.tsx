@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { VAN_ZONING, getZoning } from "../../../../../data/vancouverZoningManifest";
-import ZoningTemplate from "./ZoningTemplate";
+import { CITIES } from "../../../../../data/zoning/cities";
+import { getManifest, getZoning } from "../../../../../data/zoning";
+import ZoningTemplate from "../../../../../components/ZoningTemplate";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return VAN_ZONING.map((z) => ({ code: z.code }));
+  return getManifest("vancouver").map((z) => ({ code: z.code }));
 }
 
 export async function generateMetadata({
@@ -15,7 +16,7 @@ export async function generateMetadata({
   params: Promise<{ code: string }>;
 }): Promise<Metadata> {
   const { code } = await params;
-  const zoning = getZoning(code);
+  const zoning = getZoning("vancouver", code);
   if (!zoning) {
     return {
       title: "Vancouver zoning",
@@ -30,7 +31,11 @@ export async function generateMetadata({
 
 export default async function Page({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const zoning = getZoning(code);
+  const zoning = getZoning("vancouver", code);
   if (!zoning) return notFound();
-  return <ZoningTemplate zoning={zoning} related={VAN_ZONING} />;
+  const manifest = getManifest("vancouver");
+  const related = manifest.filter(
+    (x) => x.code !== zoning.code && (x.family === zoning.family || x.category === zoning.category)
+  );
+  return <ZoningTemplate zoning={zoning} city={CITIES.vancouver} related={related} />;
 }

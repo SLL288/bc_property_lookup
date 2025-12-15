@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { VAN_ZONING, type ZoningItem } from "../../../../data/vancouverZoningManifest";
+import { getManifest } from "../../../../data/zoning";
+import type { ZoningItem } from "../../../../data/zoning/types";
 
 const familyOrder = ["C", "FC", "I", "R", "RM", "RR", "RT"];
 
@@ -19,14 +20,17 @@ export default function VancouverZoningIndex() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
 
+  const manifest = useMemo(() => getManifest("vancouver"), []);
+
   const categories = useMemo(() => {
-    const s = new Set(VAN_ZONING.map((z) => z.category).filter(Boolean));
+    const s = new Set(manifest.map((z) => z.category).filter(Boolean));
     return ["All", ...Array.from(s).sort()];
-  }, []);
+  }, [manifest]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return VAN_ZONING.filter((z) => (category === "All" ? true : z.category === category))
+    return manifest
+      .filter((z) => (category === "All" ? true : z.category === category))
       .filter((z) => {
         if (!q) return true;
         return (
@@ -37,7 +41,7 @@ export default function VancouverZoningIndex() {
         );
       })
       .sort(sortCode);
-  }, [query, category]);
+  }, [query, category, manifest]);
 
   const grouped = useMemo(() => {
     const byCat = new Map<string, ZoningItem[]>();
