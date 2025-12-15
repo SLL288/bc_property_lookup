@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import { SearchBox } from "@/components/SearchBox";
+import Link from "next/link";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const metadata: Metadata = {
-  title: "BC Property Intelligence Lookup — zoning, ALR, assessment snapshot",
+  title: "BC Property Intelligence Lookup - zoning, ALR, assessment snapshot",
   description: "Instant property snapshot for Metro Vancouver: zoning map links, ALR check, and assessment quick facts.",
   openGraph: {
     title: "BC Property Intelligence Lookup",
@@ -40,6 +41,36 @@ export default function HomePage() {
         </p>
       </section>
       <SearchBox />
+
+      <section className="w-full space-y-3">
+        <h2 className="text-xl font-semibold text-gray-900">Browse topics</h2>
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            { href: "/vancouver/zoning", title: "Vancouver zoning", desc: "Search and filter Vancouver codes." },
+            { href: "/burnaby/zoning", title: "Burnaby zoning", desc: "Official map + zoning PDFs." },
+            { href: "/surrey/zoning", title: "Surrey zoning", desc: "COSMOS map + zoning bylaw PDF pages." },
+            { href: "/assessment/bc-assessment-lookup", title: "Assessment lookup", desc: "Understand BC Assessment results." },
+            { href: "/parcel/parcel-map-bc", title: "Parcel map", desc: "Locate parcels by address or coordinates." },
+            { href: "/alr/is-my-property-in-alr", title: "ALR check", desc: "Check Agricultural Land Reserve status." },
+            { href: "/vancouver/zoning/r1-1/laneway-house", title: "Laneway on R1-1", desc: "Common questions (verify with City)." },
+            { href: "/bc/accreted-land-ownership", title: "Accreted land", desc: "Waterfront boundary basics with official sources." }
+          ].map((p) => (
+            <Link
+              key={p.href}
+              href={p.href as Route}
+              className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow"
+            >
+              <div className="font-semibold text-gray-900">{p.title}</div>
+              <div className="mt-1 text-sm text-gray-700">{p.desc}</div>
+            </Link>
+          ))}
+        </div>
+        <div className="text-sm text-brand">
+          <Link href="/site-index" className="underline">
+            View all pages (site index)
+          </Link>
+        </div>
+      </section>
       <section className="grid w-full gap-4 md:grid-cols-3">
         {["Instant geocoding", "Municipal zoning links", "ALR boundary check"].map((item) => (
           <div key={item} className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
@@ -54,7 +85,7 @@ export default function HomePage() {
         <h2 className="text-xl font-semibold text-gray-900">Popular lookups</h2>
         <div className="grid gap-4 md:grid-cols-2">
           {[
-            { href: "/alr/is-my-property-in-alr", title: "Is my property in the ALR?", desc: "ALR boundary check + official source links." },
+            { href: "/alr/is-my-property-in-alr", title: "Is my property in the ALR->", desc: "ALR boundary check + official source links." },
             { href: "/assessment/bc-assessment-lookup", title: "BC Assessment lookup", desc: "What assessment means + where to verify." },
             { href: "/burnaby/zoning", title: "Burnaby zoning lookup", desc: "Zoning viewer links + quick guidance." },
             { href: "/vancouver/zoning", title: "Vancouver zoning map", desc: "Find zoning maps and basic interpretation." },
@@ -62,8 +93,8 @@ export default function HomePage() {
             { href: "/burnaby/zoning", title: "Burnaby zoning codes", desc: "Browse Burnaby zoning PDFs and map links." },
             { href: "/surrey/zoning", title: "Surrey zoning codes", desc: "Browse Surrey zoning bylaw (PDF pages) and COSMOS map." },
             { href: "/zoning/how-to-check-property-zoning-bc", title: "How to check zoning in BC", desc: "Step-by-step checklist and links." },
-            { href: "/zoning/what-is-r1-zoning-bc", title: "What does R1 zoning mean?", desc: "R1 explained with municipal caveats." },
-            { href: "/fsr/what-is-fsr-zoning", title: "What is FSR?", desc: "FSR explained with examples." },
+            { href: "/zoning/what-is-r1-zoning-bc", title: "What does R1 zoning mean->", desc: "R1 explained with municipal caveats." },
+            { href: "/fsr/what-is-fsr-zoning", title: "What is FSR->", desc: "FSR explained with examples." },
             { href: "/parcel/parcel-map-bc", title: "Parcel map by lat/lng", desc: "Use coordinates to start research fast." }
           ].map((p) => (
             <a

@@ -103,7 +103,7 @@ export function SearchBox({ initialQuery = "" }: { initialQuery?: string }) {
                 </button>
               ))}
             </div>
-            {loading && <div className="px-4 py-2 text-xs text-gray-600">Searching…</div>}
+            {loading && <div className="px-4 py-2 text-xs text-gray-600">Searching...</div>}
           </div>
         )}
         <div className="mt-3 flex flex-wrap gap-2 text-sm text-gray-700">

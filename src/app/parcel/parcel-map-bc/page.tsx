@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SeoPageShell } from "@/app/_components/SeoPageShell";
 
 export const metadata: Metadata = {
-  title: "Parcel Map BC (By Lat/Lng) — Start a Property Lookup Fast",
+  title: "Parcel Map BC (By Lat/Lng) - Start a Property Lookup Fast",
   description: "Use latitude/longitude or an address to start researching parcels, zoning, and assessments in BC."
 };
 
@@ -17,7 +17,7 @@ export default function Page() {
       }
     >
       <p className="text-gray-800">
-        Tip: For best results, confirm the municipality first, then use the city’s parcel / zoning viewer.
+        Tip: For best results, confirm the municipality first, then use the city's parcel / zoning viewer.
       </p>
     </SeoPageShell>
   );

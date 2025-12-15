@@ -9,7 +9,7 @@ const hubUrl = zoning?.hubUrl ?? null;
 const lanewayInfoUrl = null; // add official URL when available
 
 export const metadata: Metadata = {
-  title: "R1-1 Laneway House in Vancouver — Common Questions & Official References",
+  title: "R1-1 Laneway House in Vancouver - Common Questions & Official References",
   description:
     "Answers to common questions about building a laneway house on R1-1 zoning in Vancouver. Informational only. Always verify site-specific rules using official City sources."
 };

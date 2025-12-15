@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About — BC Property Intelligence Lookup",
+  title: "About - BC Property Intelligence Lookup",
   description: "Sources, disclaimers, and contact for the BC Property Intelligence Lookup MVP."
 };
 
@@ -29,7 +29,13 @@ export default function AboutPage() {
 
       <section className="space-y-2">
         <h2 className="text-xl font-semibold text-gray-900">Contact</h2>
-        <p className="text-gray-800">Questions or issues? Email us at <a href="mailto:feedback@example.com" className="text-brand">feedback@example.com</a>.</p>
+        <p className="text-gray-800">
+          Questions or issues? Email us at{" "}
+          <a href="mailto:feedback@example.com" className="text-brand">
+            feedback@example.com
+          </a>
+          .
+        </p>
       </section>
     </div>
   );

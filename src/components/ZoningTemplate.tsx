@@ -87,7 +87,7 @@ export function ZoningTemplate({ zoning, city, related }: Props) {
 
       <header className="space-y-3">
         <h1 className="text-3xl font-semibold">
-          {zoning.displayCode} Zoning in {city.name} — {zoning.name}
+          {zoning.displayCode} Zoning in {city.name} - {zoning.name}
         </h1>
       <p className="text-slate-600">
         Plain-English overview of <strong>{zoning.displayCode}</strong> zoning in {city.name}, with official
@@ -123,7 +123,7 @@ export function ZoningTemplate({ zoning, city, related }: Props) {
         <div className="mt-3 space-y-3 text-slate-700">
           <div>
             <h3 className="font-medium">Is this page an official source?</h3>
-            <p>No — it’s informational. Always verify details using the city’s zoning map and the official schedule/bylaw.</p>
+            <p>No - it's informational. Always verify details using the city's zoning map and the official schedule/bylaw.</p>
           </div>
           <div>
             <h3 className="font-medium">Why do rules differ within the same code family?</h3>

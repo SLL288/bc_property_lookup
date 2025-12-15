@@ -111,7 +111,7 @@ export function ResultCards({
             {municipality?.name && <p className="font-semibold">Municipality: {municipality.name}</p>}
             {(municipality?.region || jurisdictionBc?.regionalDistrict) && (
               <p className="text-gray-700">
-                Regional district: {municipality?.region ?? jurisdictionBc?.regionalDistrict ?? "—"}
+                Regional district: {municipality?.region ?? jurisdictionBc?.regionalDistrict ?? "-"}
               </p>
             )}
             <p className="text-xs text-gray-600">Sources: local boundary detection + Province of BC legal admin boundaries</p>
@@ -299,26 +299,26 @@ export function ResultCards({
             </details>
           )}
           <p className="text-xs text-gray-600">
-            Zoning controls permitted uses and density. Comprehensive/“CD” zones are site-specific—always verify with the official bylaw.
+            Zoning controls permitted uses and density. Comprehensive/"CD" zones are site-specific - always verify with the official bylaw.
           </p>
         </div>
       </Card>
       <Card title="Assessment (beta)">
         {assessment?.available ? (
           <div className="space-y-1 text-sm text-gray-800">
-            <p>Year: {assessment.year ?? "—"}</p>
-            <p>Total: {assessment.value ?? "—"}</p>
+            <p>Year: {assessment.year ?? "-"}</p>
+            <p>Total: {assessment.value ?? "-"}</p>
             {assessment.land !== undefined && (
               <p>Land: ${Math.round(assessment.land).toLocaleString()}</p>
             )}
             {assessment.improvement !== undefined && (
               <p>Improvement: ${Math.round(assessment.improvement).toLocaleString()}</p>
             )}
-            <p>Source: {assessment.class ?? "—"}</p>
+            <p>Source: {assessment.class ?? "-"}</p>
           </div>
         ) : (
           <div className="space-y-2 text-sm text-gray-700">
-            <p>{assessment?.message ?? "Assessment lookup unavailable in MVP — coming soon."}</p>
+            <p>{assessment?.message ?? "Assessment lookup unavailable in MVP - coming soon."}</p>
           </div>
         )}
         {assessment?.link && (

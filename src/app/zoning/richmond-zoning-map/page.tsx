@@ -3,7 +3,7 @@ import { SeoPageShell } from "@/app/_components/SeoPageShell";
 import { getMunicipalityLinks } from "@/lib/municipalityLinks";
 
 export const metadata: Metadata = {
-  title: "Richmond Zoning Map — Find Your Zone by Address",
+  title: "Richmond Zoning Map - Find Your Zone by Address",
   description: "Locate a Richmond address and open official zoning map resources to verify zone, overlays, and regulations."
 };
 

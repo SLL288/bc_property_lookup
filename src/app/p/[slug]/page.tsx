@@ -23,15 +23,11 @@ async function tryServerLookup(decoded: string) {
   }
 }
 
-export async function generateMetadata({
-  params
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const decoded = decodeSlug(slug);
   return {
-    title: `${decoded} — PID, zoning, ALR check (BC)`,
+    title: `${decoded} - PID, zoning, ALR check (BC)`,
     description: `Lookup PID, municipality, zoning code, and ALR status for ${decoded}. Verify via official sources.`
   };
 }

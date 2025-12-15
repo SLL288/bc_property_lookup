@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 
-export default function LegacyVancouverZoningCode({
+export default async function LegacyVancouverZoningCode({
   params
 }: {
-  params: { code: string };
+  params: Promise<{ code: string }>;
 }) {
-  const code = params.code.toLowerCase();
-  redirect(`/vancouver/zoning/${code}`);
+  const { code } = await params;
+  const normalized = code.toLowerCase();
+  redirect(`/vancouver/zoning/${normalized}`);
 }

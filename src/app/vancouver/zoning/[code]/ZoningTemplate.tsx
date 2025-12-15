@@ -76,7 +76,7 @@ export default function ZoningTemplate({ zoning, related }: Props) {
 
       <header className="space-y-3">
         <h1 className="text-3xl font-semibold">
-          {zoning.displayCode} Zoning in Vancouver — {zoning.name}
+          {zoning.displayCode} Zoning in Vancouver - {zoning.name}
         </h1>
     <p className="text-slate-600">
       Plain-English overview of <strong>{zoning.displayCode}</strong> zoning in Vancouver, with official references.
@@ -109,7 +109,7 @@ export default function ZoningTemplate({ zoning, related }: Props) {
         <div className="mt-3 space-y-3 text-slate-700">
           <div>
             <h3 className="font-medium">Is this page an official source?</h3>
-            <p>No — it’s informational. Always verify details using the City of Vancouver’s zoning map and the official district schedule PDF.</p>
+            <p>No - it's informational. Always verify details using the City of Vancouver's zoning map and the official district schedule PDF.</p>
           </div>
           <div>
             <h3 className="font-medium">Why do rules differ within the same code family?</h3>

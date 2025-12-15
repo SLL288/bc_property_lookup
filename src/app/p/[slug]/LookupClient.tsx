@@ -117,7 +117,7 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
   const [snapshot, setSnapshot] = useState<Snapshot | null>(initialSnapshot ?? null);
   const [loading, setLoading] = useState(!initialSnapshot);
   const [error, setError] = useState<string | null>(null);
-  const [status, setStatus] = useState<string>(initialSnapshot ? "Using server result" : "Preparing lookup…");
+  const [status, setStatus] = useState<string>(initialSnapshot ? "Using server result" : "Preparing lookup...");
   const [recent, setRecent] = useState<string[]>([]);
   const [shareUrl, setShareUrl] = useState<string>("");
   const [cacheHit, setCacheHit] = useState(false);
@@ -148,7 +148,7 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
     const load = async () => {
       setLoading(true);
       setError(null);
-      setStatus(initialSnapshot ? "Using server result" : "Checking local cache…");
+      setStatus(initialSnapshot ? "Using server result" : "Checking local cache...");
       setFallbackUsed(false);
 
       if (typeof window !== "undefined") {
@@ -165,7 +165,7 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
       }
 
       try {
-        setStatus("Fetching from server…");
+        setStatus("Fetching from server...");
         const res = await fetch(`/api/lookup?address=${encodeURIComponent(slug)}`);
         const ctype = res.headers.get("content-type") || "";
         if (!ctype.includes("application/json")) {
@@ -186,7 +186,7 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
       } catch (err) {
         // Fallback: run lookup client-side
         try {
-          setStatus("Server unavailable, running fallback…");
+          setStatus("Server unavailable, running fallback...");
           setFallbackUsed(true);
           const getAttr = (obj: unknown, key: string) => {
             if (!obj || typeof obj !== "object") return undefined;
@@ -268,7 +268,7 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
   }, [slug]);
 
   const assessment = useMemo(() => {
-    if (!snapshot?.zoning?.raw) return { available: false, message: "Assessment lookup unavailable in MVP — coming soon." };
+    if (!snapshot?.zoning?.raw) return { available: false, message: "Assessment lookup unavailable in MVP - coming soon." };
     const land = snapshot.zoning.raw.current_land_value !== undefined ? Number(snapshot.zoning.raw.current_land_value) : undefined;
     const improvement =
       snapshot.zoning.raw.current_improvement_value !== undefined ? Number(snapshot.zoning.raw.current_improvement_value) : undefined;
@@ -287,7 +287,7 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
         link: process.env.NEXT_PUBLIC_BC_ASSESSMENT_URL ?? "https://www.bcassessment.ca/"
       };
     }
-    return { available: false, message: "Assessment lookup unavailable in MVP — coming soon.", link: "https://www.bcassessment.ca/" };
+    return { available: false, message: "Assessment lookup unavailable in MVP - coming soon.", link: "https://www.bcassessment.ca/" };
   }, [snapshot]);
 
   return (

@@ -12,7 +12,7 @@ export default function Page() {
       title="How to Check Property Zoning in BC"
       intro={
         <>
-          Zoning is municipal. The fastest method is: locate the address → open the municipality’s zoning map → confirm the zone and overlays → read the bylaw sections for use and density.
+          Zoning is municipal. The fastest method is: locate the address, open the municipality's zoning map, confirm the zone and overlays, and read the bylaw sections for use and density.
         </>
       }
     >

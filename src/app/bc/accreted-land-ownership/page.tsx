@@ -134,7 +134,7 @@ export default function Page() {
           <OfficialLink href="https://www2.gov.bc.ca/gov/content/industry/crown-land-water">
             BC Ministry of Water, Land and Resource Stewardship (Crown land)
           </OfficialLink>
-          <OfficialLink href="https://www.canlii.org/en/bc/">BC Supreme Court decisions (CanLII – accretion cases)</OfficialLink>
+          <OfficialLink href="https://www.canlii.org/en/bc/">BC Supreme Court decisions (CanLII - accretion cases)</OfficialLink>
           <OfficialLink href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/96245_01">
             Land Act (British Columbia)
           </OfficialLink>

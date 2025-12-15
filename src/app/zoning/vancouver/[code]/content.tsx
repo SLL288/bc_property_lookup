@@ -10,7 +10,7 @@ export function renderMeaning(zone: VancouverZone) {
     FC: "False Creek zoning with special planning context and district-specific schedules.",
     RR: "Rental-focused zoning that regulates rental housing forms under district-specific rules.",
     I: "Industrial or employment zoning; exact permissions depend on the district schedule.",
-    CD: "Comprehensive Development zoning—site-specific, created by rezoning; always verify the CD schedule."
+    CD: "Comprehensive Development zoning - site-specific, created by rezoning; always verify the CD schedule."
   };
 
   return (
@@ -24,7 +24,7 @@ export function renderFAQ(zone: VancouverZone) {
     <div className="mt-3 space-y-4 text-slate-700">
       <div>
         <h3 className="font-medium">Is this page an official source?</h3>
-        <p>No — it’s informational. Always verify details using the City of Vancouver’s zoning map and the official district schedule PDF.</p>
+        <p>No - it's informational. Always verify details using the City of Vancouver's zoning map and the official district schedule PDF.</p>
       </div>
       <div>
         <h3 className="font-medium">Why do zoning rules differ even within the same code family?</h3>

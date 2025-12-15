@@ -11,11 +11,7 @@ export function generateStaticParams() {
   return getManifest("vancouver").map((z) => ({ code: z.code }));
 }
 
-export async function generateMetadata({
-  params
-}: {
-  params: Promise<{ code: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ code: string }> }): Promise<Metadata> {
   const { code } = await params;
   const zoning = getZoning("vancouver", code);
   if (!zoning) {
@@ -26,7 +22,7 @@ export async function generateMetadata({
     };
   }
   return {
-    title: `${zoning.displayCode} Zoning in Vancouver — ${zoning.name} | BC Property Lookup`,
+    title: `${zoning.displayCode} Zoning in Vancouver - ${zoning.name} | BC Property Lookup`,
     description: `Plain-English overview of Vancouver ${zoning.displayCode} zoning with official references. Always verify using the official district schedule and City zoning map.`,
     alternates: { canonical: canonicalUrl(`/vancouver/zoning/${zoning.code}`) }
   };
