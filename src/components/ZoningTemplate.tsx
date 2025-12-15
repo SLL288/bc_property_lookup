@@ -70,6 +70,8 @@ const RelatedLinks = ({ current, related }: { current: ZoningItem; related: Zoni
 };
 
 export function ZoningTemplate({ zoning, city, related }: Props) {
+  const zoningIndexHref = { pathname: city.zoningIndexPath };
+
   return (
     <div className="space-y-8">
       <nav className="text-sm text-slate-600">
@@ -77,7 +79,7 @@ export function ZoningTemplate({ zoning, city, related }: Props) {
           Home
         </Link>{" "}
         /{" "}
-        <Link href={city.zoningIndexPath} className="underline">
+        <Link href={zoningIndexHref} className="underline">
           {city.name} zoning
         </Link>{" "}
         / <span className="font-medium text-slate-800">{zoning.displayCode}</span>
