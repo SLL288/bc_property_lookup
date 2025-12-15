@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { ResultCards } from "@/components/ResultCards";
 import { MapView } from "@/components/MapView";
