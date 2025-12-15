@@ -72,14 +72,24 @@ export default function LookupClient({ slug }: { slug: string }) {
       try {
         setStatus("Calling lookup API...");
         const res = await fetch(`/api/lookup?address=${encodeURIComponent(slug)}`);
+        const ctype = res.headers.get("content-type") || "";
+        if (!ctype.includes("application/json")) {
+          throw new Error(`Unexpected response type: ${ctype || "unknown"}`);
+        }
         if (!res.ok) throw new Error(await res.text());
         const data = (await res.json()) as Snapshot;
+        if (!data || typeof data.address !== "string") {
+          throw new Error("Invalid lookup response");
+        }
         setSnapshot(data);
         saveRecent(data.address);
         if (typeof window !== "undefined") {
           window.localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
         }
       } catch (err) {
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem(cacheKey);
+        }
         if (!snapshot) {
           setError(err instanceof Error ? err.message : "Lookup failed");
         }

@@ -2,7 +2,7 @@ export const municipalLinks: Record<string, string> = {
   Vancouver: "https://maps.vancouver.ca/vanmap-viewer/",
   Burnaby: "https://gis.burnaby.ca/burnabymap/",
   Surrey: "https://cosmos.surrey.ca/external/",
-  Richmond: "https://citymap2.richmond.ca/",
+  Richmond: "https://www.richmond.ca/services/maps.htm",
   Coquitlam: "https://www.coquitlam.ca/online-services/maps-gis",
   "District of North Vancouver": "https://geoweb.dnv.org/",
   "City of North Vancouver": "https://www.cnv.org/your-government/mapping-and-gis",
