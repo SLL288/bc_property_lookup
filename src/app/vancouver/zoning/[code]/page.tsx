@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CITIES } from "../../../../../data/zoning/cities";
-import { getManifest, getZoning } from "../../../../../data/zoning";
+import { CITIES } from "@data/zoning/cities";
+import { getManifest, getZoning } from "@data/zoning";
 import ZoningTemplate from "../../../../../components/ZoningTemplate";
 
 export const dynamicParams = false;

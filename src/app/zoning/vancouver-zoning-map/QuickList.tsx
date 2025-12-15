@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { getManifest } from "../../../../data/zoning";
+import { getManifest } from "@data/zoning";
 
 export function QuickList() {
   const [query, setQuery] = useState("");
