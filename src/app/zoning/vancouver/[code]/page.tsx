@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { VANCOUVER_ZONES } from "@/data/vancouverZones";
+import { VANCOUVER_ZONES } from "../../../../../data/vancouverZones";
 import { renderFAQ, renderMeaning, renderRelated } from "./content";
 
 export function generateStaticParams() {

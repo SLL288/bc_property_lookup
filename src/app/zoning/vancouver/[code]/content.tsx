@@ -1,4 +1,4 @@
-import type { VancouverZone } from "@/data/vancouverZones";
+import type { VancouverZone } from "../../../../../data/vancouverZones";
 
 export function renderMeaning(zone: VancouverZone) {
   const family = zone.code.split("-")[0];
