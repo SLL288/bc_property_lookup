@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { SeoPageShell } from "@/app/_components/SeoPageShell";
 import { getMunicipalityLinks } from "@/lib/municipalityLinks";
@@ -73,6 +74,13 @@ export default function Page() {
         <h3 className="text-lg font-semibold text-gray-900">Popular Vancouver zoning districts (quick reference)</h3>
         <p className="text-sm text-gray-700">
           These are common zoning district labels you’ll see in Vancouver. This is a high-level overview only—district rules, schedules, and overlays can apply. Always verify details using the official zoning bylaw and City resources.
+        </p>
+        <p className="text-sm text-gray-700">
+          Want the full list with search and filters?{" "}
+          <Link href="/vancouver/zoning" className="font-semibold text-brand underline">
+            Open the Vancouver zoning codes index
+          </Link>
+          .
         </p>
         <QuickList />
       </div>

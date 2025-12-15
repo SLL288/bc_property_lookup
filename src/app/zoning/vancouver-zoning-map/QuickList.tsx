@@ -1,25 +1,20 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
-const ZONING_ITEMS = [
-  { code: "CD-1", desc: "Site-specific Comprehensive Development districts created by rezoning; rules live in the CD-1 schedule.", url: "https://cd1-bylaws.vancouver.ca/" },
-  { code: "RS", desc: "Single-family residential districts (various RS subtypes) for low-density housing.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
-  { code: "RT", desc: "Two-family / duplex / infill-oriented residential districts; varies by RT subtype.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
-  { code: "RM", desc: "Multiple dwelling residential districts for apartments and multi-unit housing (varies by RM subtype).", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
-  { code: "C", desc: "Commercial districts for retail and service uses (rules vary by C subtype).", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
-  { code: "DD", desc: "Downtown District framework; often paired with overlays and policies.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
-  { code: "FC", desc: "False Creek districts with policy-driven rules; verify in official resources.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
-  { code: "I", desc: "Industrial / employment districts (rules vary by I subtype).", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
-  { code: "HA", desc: "Historic Area districts (e.g., Gastown/Chinatown) with additional heritage controls.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" }
-];
+import { VAN_ZONING } from "../../../../data/vancouverZoningManifest";
 
 export function QuickList() {
   const [query, setQuery] = useState("");
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return ZONING_ITEMS;
-    return ZONING_ITEMS.filter((item) => item.code.toLowerCase().includes(q));
+    const items = [...VAN_ZONING].sort((a, b) => a.displayCode.localeCompare(b.displayCode, "en", { numeric: true }));
+    if (!q) return items;
+    return items.filter(
+      (item) =>
+        item.displayCode.toLowerCase().includes(q) ||
+        item.name.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q)
+    );
   }, [query]);
 
   return (
@@ -36,17 +31,15 @@ export function QuickList() {
         {filtered.map((item) => (
           <div key={item.code} className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-base font-semibold text-gray-900">{item.code}</span>
-              <a
-                href={item.url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sm font-medium text-brand hover:text-brand-dark"
-              >
-                View official definition
+              <div>
+                <div className="text-base font-semibold text-gray-900">{item.displayCode}</div>
+                <div className="text-xs uppercase tracking-wide text-gray-500">{item.category}</div>
+              </div>
+              <a href={`/vancouver/zoning/${item.code}`} className="text-sm font-medium text-brand hover:text-brand-dark">
+                View zone
               </a>
             </div>
-            <p className="mt-1 text-sm text-gray-800">{item.desc}</p>
+            <p className="mt-1 text-sm text-gray-800">{item.name}</p>
           </div>
         ))}
       </div>
