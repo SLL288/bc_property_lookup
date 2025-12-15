@@ -41,7 +41,8 @@ export async function GET(req: Request) {
 
   const cacheKey = new Request(url.toString());
   try {
-    const cached = await caches.default.match(cacheKey);
+    const cache = await caches.open("lookup-cache");
+    const cached = await cache.match(cacheKey);
     if (cached) {
       return cached;
     }
@@ -104,7 +105,8 @@ export async function GET(req: Request) {
     });
 
     try {
-      await caches.default.put(cacheKey, res.clone());
+      const cache = await caches.open("lookup-cache");
+      await cache.put(cacheKey, res.clone());
     } catch {
       // ignore cache write errors
     }
