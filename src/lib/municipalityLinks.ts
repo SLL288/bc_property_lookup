@@ -17,9 +17,9 @@ export const municipalityLinks: Record<
   },
   vancouver: {
     name: "Vancouver",
-    zoningMapUrl: "https://maps.vancouver.ca/vanmap-viewer/",
+    zoningMapUrl: "https://maps.vancouver.ca/zoning/",
     zoningBylawUrl: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies.aspx",
-    propertyInfoUrl: "https://vancouver.ca/home-property-development/interactive-development-application-map.aspx",
+    propertyInfoUrl: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies.aspx",
     developmentAppsUrl: "https://vancouver.ca/home-property-development/rezoning-applications.aspx"
   },
   surrey: {
