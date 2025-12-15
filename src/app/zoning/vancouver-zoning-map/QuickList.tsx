@@ -3,15 +3,15 @@
 import { useMemo, useState } from "react";
 
 const ZONING_ITEMS = [
-  { code: "CD-1", desc: "Site-specific Comprehensive Development districts created by rezoning; rules live in the CD-1 schedule.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies.aspx" },
-  { code: "RS", desc: "Single-family residential districts (various RS subtypes) for low-density housing.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies.aspx" },
-  { code: "RT", desc: "Two-family / duplex / infill-oriented residential districts; varies by RT subtype.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies.aspx" },
-  { code: "RM", desc: "Multiple dwelling residential districts for apartments and multi-unit housing (varies by RM subtype).", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies.aspx" },
-  { code: "C", desc: "Commercial districts for retail and service uses (rules vary by C subtype).", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies.aspx" },
-  { code: "DD", desc: "Downtown District framework; often paired with overlays and policies.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies.aspx" },
-  { code: "FC", desc: "False Creek districts with policy-driven rules; verify in official resources.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies.aspx" },
-  { code: "I", desc: "Industrial / employment districts (rules vary by I subtype).", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies.aspx" },
-  { code: "HA", desc: "Historic Area districts (e.g., Gastown/Chinatown) with additional heritage controls.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies.aspx" }
+  { code: "CD-1", desc: "Site-specific Comprehensive Development districts created by rezoning; rules live in the CD-1 schedule.", url: "https://cd1-bylaws.vancouver.ca/" },
+  { code: "RS", desc: "Single-family residential districts (various RS subtypes) for low-density housing.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
+  { code: "RT", desc: "Two-family / duplex / infill-oriented residential districts; varies by RT subtype.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
+  { code: "RM", desc: "Multiple dwelling residential districts for apartments and multi-unit housing (varies by RM subtype).", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
+  { code: "C", desc: "Commercial districts for retail and service uses (rules vary by C subtype).", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
+  { code: "DD", desc: "Downtown District framework; often paired with overlays and policies.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
+  { code: "FC", desc: "False Creek districts with policy-driven rules; verify in official resources.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
+  { code: "I", desc: "Industrial / employment districts (rules vary by I subtype).", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" },
+  { code: "HA", desc: "Historic Area districts (e.g., Gastown/Chinatown) with additional heritage controls.", url: "https://vancouver.ca/home-property-development/zoning-and-land-use-policies-document-library.aspx" }
 ];
 
 export function QuickList() {
