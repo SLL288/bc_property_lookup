@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { VANCOUVER_ZONES } from "../../../../../data/vancouverZones";
 import { renderFAQ, renderMeaning, renderRelated } from "./content";
 
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return VANCOUVER_ZONES.map((z) => ({ code: z.code.toLowerCase() }));
 }
