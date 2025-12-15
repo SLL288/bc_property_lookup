@@ -39,6 +39,16 @@ export default function VancouverZoningIndex() {
       .sort(sortCode);
   }, [query, category]);
 
+  const grouped = useMemo(() => {
+    const byCat = new Map<string, ZoningItem[]>();
+    filtered.forEach((z) => {
+      const catKey = z.category || "Other";
+      if (!byCat.has(catKey)) byCat.set(catKey, []);
+      byCat.get(catKey)!.push(z);
+    });
+    return Array.from(byCat.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+  }, [filtered]);
+
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 space-y-6">
       <header className="space-y-3">
@@ -69,17 +79,24 @@ export default function VancouverZoningIndex() {
         </select>
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((z) => (
-          <Link
-            key={z.code}
-            href={`/vancouver/zoning/${z.code}`}
-            className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-          >
-            <div className="text-sm font-semibold text-emerald-700">{z.displayCode}</div>
-            <div className="mt-1 text-lg font-semibold text-slate-900">{z.name}</div>
-            <div className="mt-1 text-sm text-slate-500">{z.category}</div>
-          </Link>
+      <div className="space-y-6">
+        {grouped.map(([catName, items]) => (
+          <div key={catName} className="space-y-3">
+            <div className="text-sm font-semibold uppercase tracking-wide text-slate-500">{catName}</div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {items.map((z) => (
+                <Link
+                  key={z.code}
+                  href={`/vancouver/zoning/${z.code}`}
+                  className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  <div className="text-sm font-semibold text-emerald-700">{z.displayCode}</div>
+                  <div className="mt-1 text-lg font-semibold text-slate-900">{z.name}</div>
+                  <div className="mt-1 text-sm text-slate-500">{z.category}</div>
+                </Link>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
 

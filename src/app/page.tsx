@@ -58,6 +58,7 @@ export default function HomePage() {
             { href: "/assessment/bc-assessment-lookup", title: "BC Assessment lookup", desc: "What assessment means + where to verify." },
             { href: "/zoning/burnaby-zoning-lookup", title: "Burnaby zoning lookup", desc: "Zoning viewer links + quick guidance." },
             { href: "/zoning/vancouver-zoning-map", title: "Vancouver zoning map", desc: "Find zoning maps and basic interpretation." },
+            { href: "/vancouver/zoning", title: "Vancouver zoning codes", desc: "Search and filter Vancouver district codes with official links." },
             { href: "/zoning/how-to-check-property-zoning-bc", title: "How to check zoning in BC", desc: "Step-by-step checklist and links." },
             { href: "/zoning/what-is-r1-zoning-bc", title: "What does R1 zoning mean?", desc: "R1 explained with municipal caveats." },
             { href: "/fsr/what-is-fsr-zoning", title: "What is FSR?", desc: "FSR explained with examples." },
