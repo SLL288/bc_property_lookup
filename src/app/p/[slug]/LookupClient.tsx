@@ -32,6 +32,64 @@ type Snapshot = {
 };
 
 const STORAGE_TTL = 1000 * 60 * 60 * 24 * 7;
+
+type DisplaySnapshot = {
+  address: string;
+  coords?: { lat: number; lon: number } | null;
+  pid?: string;
+  pidSource?: string;
+  parcelName?: string;
+  parcelStatus?: string;
+  municipality?: string | null;
+  regionalDistrict?: string | null;
+  alr?: boolean | null;
+  alrStatus?: string | null;
+  flood?: Snapshot["flood"];
+  zoning?: Snapshot["zoning"];
+  errors?: string[];
+  officialMapLink?: string;
+};
+
+const buildDisplaySnapshot = (snap: Snapshot | null): DisplaySnapshot | null => {
+  if (!snap) return null;
+  const raw = snap.zoning?.raw as Record<string, any> | undefined;
+  const pidFromRaw =
+    raw?.PID_FORMATTED ??
+    raw?.PID ??
+    raw?.LTO_PID ??
+    (raw?.PID_NUMBER ? String(raw.PID_NUMBER) : undefined);
+  const parcelName = snap.parcel?.name ?? raw?.PARCEL_NAME ?? raw?.Address ?? raw?.property_address;
+  const parcelStatus = snap.parcel?.status ?? raw?.PARCEL_STATUS ?? raw?.PARCEL_CLASS;
+  const municipality =
+    snap.municipality ??
+    raw?.MUNICIPALITY ??
+    raw?.municipality ??
+    raw?.CITY ??
+    raw?.city ??
+    raw?.ADMIN_AREA_NAME ??
+    null;
+  const regionalDistrict = snap.regionalDistrict ?? raw?.REGIONAL_DISTRICT ?? raw?.regional_district ?? null;
+  const pid = snap.pid ?? pidFromRaw;
+  const pidSource = snap.pid ? "Province of BC (ParcelMap BC)" : pidFromRaw ? "Municipal/zoning data" : undefined;
+  const officialMapLink = getMunicipalLink(municipality ?? undefined);
+
+  return {
+    address: snap.address,
+    coords: snap.coords,
+    pid,
+    pidSource,
+    parcelName,
+    parcelStatus,
+    municipality,
+    regionalDistrict,
+    alr: snap.alr,
+    alrStatus: snap.alrStatus,
+    flood: snap.flood,
+    zoning: snap.zoning,
+    errors: snap.errors,
+    officialMapLink
+  };
+};
 const summaryText = (snap: Snapshot | undefined, share: string) => {
   const coords = snap?.coords ? `${snap.coords.lat.toFixed(5)}, ${snap.coords.lon.toFixed(5)}` : "N/A";
   const muni = snap?.municipality ?? "Unknown";
@@ -234,6 +292,13 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
+      {snapshot && (
+        <p className="sr-only">
+          PID: {buildDisplaySnapshot(snapshot)?.pid ?? "N/A"}, Zoning:{" "}
+          {snapshot.zoning?.code ?? snapshot.zoning?.name ?? "N/A"}, ALR:{" "}
+          {snapshot.alr === null || snapshot.alr === undefined ? "Unknown" : snapshot.alr ? "Yes" : "No"}
+        </p>
+      )}
       {/* Snapshot header */}
       <div className="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-2">
@@ -299,44 +364,46 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
 
       {snapshot && (
         <>
-          {snapshot.errors && snapshot.errors.length > 0 && (
-            <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
-              Some sources unavailable: {snapshot.errors.join("; ")} <button onClick={() => location.reload()} className="underline">Retry</button>
-            </div>
-          )}
-          <ResultCards
-            normalizedAddress={snapshot.address}
-            coordinates={snapshot.coords ?? undefined}
-            municipality={
-              snapshot.municipality
-                ? { name: snapshot.municipality, region: snapshot.regionalDistrict ?? undefined }
-                : null
-            }
-            zoningLink={getMunicipalLink(snapshot.municipality ?? undefined)}
-            zoning={snapshot.zoning}
-            inAlr={snapshot.alr ?? null}
-            alrProv={
-              snapshot.alr !== undefined
-                ? {
-                    insideAlr: Boolean(snapshot.alr),
-                    status: snapshot.alrStatus ?? undefined,
-                    source: "Province of BC"
-                  }
-                : null
-            }
-            pidInfo={{
-              pid: snapshot.pid,
-              parcelName: snapshot.parcel?.name,
-              parcelStatus: snapshot.parcel?.status
-            }}
-            jurisdictionBc={{
-              municipality: snapshot.municipality ?? undefined,
-              regionalDistrict: snapshot.regionalDistrict ?? undefined
-            }}
-            floodplain={snapshot.flood ?? undefined}
-            shareUrl={shareUrl}
-            assessment={assessment as any}
-          />
+          {/* Details + diagnostics */}
+          <div className="flex flex-col gap-4">
+            <ResultCards
+              normalizedAddress={snapshot.address}
+              coordinates={snapshot.coords ?? undefined}
+              municipality={
+                buildDisplaySnapshot(snapshot)?.municipality
+                  ? {
+                      name: buildDisplaySnapshot(snapshot)?.municipality as string,
+                      region: buildDisplaySnapshot(snapshot)?.regionalDistrict ?? undefined
+                    }
+                  : null
+              }
+              zoningLink={buildDisplaySnapshot(snapshot)?.officialMapLink ?? getMunicipalLink()}
+              zoning={snapshot.zoning}
+              inAlr={snapshot.alr ?? null}
+              alrProv={
+                snapshot.alr !== undefined
+                  ? {
+                      insideAlr: Boolean(snapshot.alr),
+                      status: snapshot.alrStatus ?? undefined,
+                      source: "Province of BC"
+                    }
+                  : null
+              }
+              parcelInfo={{
+                pid: buildDisplaySnapshot(snapshot)?.pid,
+                parcelName: buildDisplaySnapshot(snapshot)?.parcelName,
+                parcelStatus: buildDisplaySnapshot(snapshot)?.parcelStatus,
+                source: buildDisplaySnapshot(snapshot)?.pidSource
+              }}
+              jurisdictionBc={{
+                municipality: buildDisplaySnapshot(snapshot)?.municipality ?? undefined,
+                regionalDistrict: buildDisplaySnapshot(snapshot)?.regionalDistrict ?? undefined
+              }}
+              floodplain={snapshot.flood ?? undefined}
+              assessment={assessment as any}
+              providerNotes={providerNotes}
+            />
+          </div>
           {snapshot.coords && (
             <div className="mt-4">
               <MapView lat={snapshot.coords.lat} lon={snapshot.coords.lon} />

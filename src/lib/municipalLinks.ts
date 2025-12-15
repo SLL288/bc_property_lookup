@@ -17,10 +17,13 @@ export const municipalLinks: Record<string, string> = {
   "White Rock": "https://www.whiterockcity.ca/882/Maps"
 };
 
+const DEFAULT_MAP_LINK =
+  "https://www2.gov.bc.ca/gov/content/data/geographic-data-services/web-based-mapping/imapbc";
+
 export const getMunicipalLink = (name?: string) => {
-  if (!name) return null;
+  if (!name) return DEFAULT_MAP_LINK;
   const key = Object.keys(municipalLinks).find(
     (city) => city.toLowerCase() === name.toLowerCase()
   );
-  return key ? municipalLinks[key] : null;
+  return key ? municipalLinks[key] : DEFAULT_MAP_LINK;
 };

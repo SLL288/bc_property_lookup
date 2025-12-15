@@ -18,7 +18,7 @@ export type ResultCardsProps = {
   } | null;
   inAlr?: boolean | null;
   alrProv?: { insideAlr: boolean; status?: string; source?: string } | null;
-  pidInfo?: { pid?: string; parcelName?: string; parcelStatus?: string; raw?: Record<string, unknown> | null } | null;
+  parcelInfo?: { pid?: string; parcelName?: string; parcelStatus?: string; source?: string } | null;
   jurisdictionBc?: { municipality?: string; regionalDistrict?: string } | null;
   floodplain?: { hasMappedFloodplainStudy: boolean; projectName?: string; reportUrl?: string } | null;
   shareUrl?: string;
@@ -45,11 +45,12 @@ export function ResultCards({
   zoning,
   inAlr,
   alrProv,
-  pidInfo,
+  parcelInfo,
   jurisdictionBc,
   floodplain,
   shareUrl,
-  assessment
+  assessment,
+  providerNotes
 }: ResultCardsProps) {
   const [copied, setCopied] = useState<string | null>(null);
   const [showDiagnostics, setShowDiagnostics] = useState(false);
@@ -73,6 +74,14 @@ export function ResultCards({
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
+      <Card title="Snapshot">
+        {providerNotes && providerNotes.length > 0 && (
+          <div className="mb-3 rounded-lg border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
+            Partial data (some sources timed out). Expand Diagnostics for details.
+          </div>
+        )}
+      </Card>
+
       <Card title="Jurisdiction">
         {(municipality || jurisdictionBc) ? (
           <div className="space-y-1 text-sm text-gray-800">
@@ -89,15 +98,24 @@ export function ResultCards({
         )}
       </Card>
 
-      <Card title="Parcel details">
+      <Card title="Parcel">
+        {(parcelInfo?.pid || parcelInfo?.parcelName) && (
+          <div className="space-y-1 text-sm text-gray-800">
+            {parcelInfo?.pid && <p className="font-semibold">PID: {parcelInfo.pid}</p>}
+            {parcelInfo?.parcelName && <p>Parcel: {parcelInfo.parcelName}</p>}
+            {parcelInfo?.parcelStatus && <p>Status: {parcelInfo.parcelStatus}</p>}
+            <p className="text-xs text-gray-600">
+              Source: {parcelInfo?.source ?? "Province of BC (ParcelMap BC)"}
+            </p>
+          </div>
+        )}
         {zoning?.raw ? (
           <div className="space-y-2 text-sm text-gray-800">
             <div className="grid grid-cols-2 gap-1 text-xs">
               {(() => {
                 const items: Array<[string, string | undefined]> = [
-                  ["Address", getField(zoning.raw, ["ADDRESS", "property_address"])],
+                  ["Address", getField(zoning.raw, ["ADDRESS", "property_address", "Address"])],
                   ["Roll number", getField(zoning.raw, ["ROLL_NUMBER", "roll_number", "folio"])],
-                  ["PID", getField(zoning.raw, ["PID_FORMATTED", "LTO_PID", "pid", "PID"])],
                   ["Plan", getField(zoning.raw, ["PLAN", "plan", "plan_number", "PLAN_NUMBER"])],
                   ["DL", getField(zoning.raw, ["DL", "district_lot"])],
                   ["Block", getField(zoning.raw, ["BLOCK", "block"])],
@@ -159,9 +177,6 @@ export function ResultCards({
                 ));
               })()}
             </div>
-            {pidInfo?.pid && !getField(zoning.raw, ["PID", "PID_FORMATTED"]) && (
-              <p className="text-xs text-gray-600">PID from ParcelMap BC: {pidInfo.pid}</p>
-            )}
             <p className="text-xs text-gray-600">
               Parcel details are for orientation only. Verify legal description and zoning with the municipality.
             </p>
