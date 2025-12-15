@@ -1,0 +1,10 @@
+# --- Canonical zoning redirects ---
+/zoning/vancouver          /vancouver/zoning            301
+/zoning/vancouver/         /vancouver/zoning            301
+/zoning/vancouver/*        /vancouver/zoning/:splat     301
+
+/zoning/vancouver-zoning-map     /vancouver/zoning       301
+/zoning/vancouver-zoning-lookup  /vancouver/zoning       301
+
+/zoning/burnaby-zoning-lookup    /burnaby/zoning        301
+/zoning/surrey-zoning-lookup     /surrey/zoning         301

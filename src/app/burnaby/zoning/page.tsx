@@ -1,9 +1,18 @@
 "use client";
 
+import type { Metadata } from "next";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { getManifest } from "@data/zoning";
 import type { ZoningItem } from "@data/zoning/types";
+import { canonicalUrl } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Burnaby Zoning Codes | BC Property Lookup",
+  description:
+    "Browse Burnaby zoning districts with official map and bylaw references. Always verify with City of Burnaby sources.",
+  alternates: { canonical: canonicalUrl("/burnaby/zoning") }
+};
 
 const familyOrder = ["R", "RM", "C", "M", "P", "A", "BYLAW"];
 

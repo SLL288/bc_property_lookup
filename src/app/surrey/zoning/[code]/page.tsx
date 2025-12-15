@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CITIES } from "@data/zoning/cities";
 import { getManifest, getZoning } from "@data/zoning";
 import { ZoningTemplate } from "@/components/ZoningTemplate";
+import { canonicalUrl } from "@/lib/seo";
 
 export const dynamicParams = false;
 
@@ -20,12 +21,14 @@ export async function generateMetadata({
   if (!zoning) {
     return {
       title: "Surrey zoning",
-      description: "Surrey zoning district overview."
+      description: "Surrey zoning district overview.",
+      alternates: { canonical: canonicalUrl("/surrey/zoning") }
     };
   }
   return {
     title: `${zoning.displayCode} Zoning in Surrey — ${zoning.name} | BC Property Lookup`,
-    description: `Overview of Surrey ${zoning.displayCode} zoning with official references. Always verify using the official map and bylaw.`
+    description: `Overview of Surrey ${zoning.displayCode} zoning with official references. Always verify using the official map and bylaw.`,
+    alternates: { canonical: canonicalUrl(`/surrey/zoning/${zoning.code}`) }
   };
 }
 

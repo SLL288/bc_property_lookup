@@ -43,7 +43,7 @@ export function renderRelated(zone: VancouverZone, allZones: VancouverZone[]) {
   return others.map((z) => (
     <a
       key={z.code}
-      href={`/zoning/vancouver/${z.code.toLowerCase()}`}
+      href={`/vancouver/zoning/${z.code.toLowerCase()}`}
       className="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-800 hover:border-brand"
     >
       {z.code}

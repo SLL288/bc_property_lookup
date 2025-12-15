@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CITIES } from "@data/zoning/cities";
 import { getManifest, getZoning } from "@data/zoning";
 import { ZoningTemplate } from "@/components/ZoningTemplate";
+import { canonicalUrl } from "@/lib/seo";
 
 export const dynamicParams = false;
 
@@ -20,12 +21,14 @@ export async function generateMetadata({
   if (!zoning) {
     return {
       title: "Vancouver zoning",
-      description: "Vancouver zoning district overview."
+      description: "Vancouver zoning district overview.",
+      alternates: { canonical: canonicalUrl("/vancouver/zoning") }
     };
   }
   return {
     title: `${zoning.displayCode} Zoning in Vancouver — ${zoning.name} | BC Property Lookup`,
-    description: `Plain-English overview of Vancouver ${zoning.displayCode} zoning with official references. Always verify using the official district schedule and City zoning map.`
+    description: `Plain-English overview of Vancouver ${zoning.displayCode} zoning with official references. Always verify using the official district schedule and City zoning map.`,
+    alternates: { canonical: canonicalUrl(`/vancouver/zoning/${zoning.code}`) }
   };
 }
 

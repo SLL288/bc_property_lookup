@@ -56,8 +56,8 @@ export default function HomePage() {
           {[
             { href: "/alr/is-my-property-in-alr", title: "Is my property in the ALR?", desc: "ALR boundary check + official source links." },
             { href: "/assessment/bc-assessment-lookup", title: "BC Assessment lookup", desc: "What assessment means + where to verify." },
-            { href: "/zoning/burnaby-zoning-lookup", title: "Burnaby zoning lookup", desc: "Zoning viewer links + quick guidance." },
-            { href: "/zoning/vancouver-zoning-map", title: "Vancouver zoning map", desc: "Find zoning maps and basic interpretation." },
+            { href: "/burnaby/zoning", title: "Burnaby zoning lookup", desc: "Zoning viewer links + quick guidance." },
+            { href: "/vancouver/zoning", title: "Vancouver zoning map", desc: "Find zoning maps and basic interpretation." },
             { href: "/vancouver/zoning", title: "Vancouver zoning codes", desc: "Search and filter Vancouver district codes with official links." },
             { href: "/burnaby/zoning", title: "Burnaby zoning codes", desc: "Browse Burnaby zoning PDFs and map links." },
             { href: "/surrey/zoning", title: "Surrey zoning codes", desc: "Browse Surrey zoning bylaw (PDF pages) and COSMOS map." },

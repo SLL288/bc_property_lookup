@@ -1,9 +1,18 @@
 "use client";
 
+import type { Metadata } from "next";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { getManifest } from "@data/zoning";
 import type { ZoningItem } from "@data/zoning/types";
+import { canonicalUrl } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Surrey Zoning Codes | BC Property Lookup",
+  description:
+    "Browse Surrey zoning districts with official map and bylaw references. Always verify with City of Surrey sources.",
+  alternates: { canonical: canonicalUrl("/surrey/zoning") }
+};
 
 const familyOrder = ["R", "RM", "RF", "RA", "BYLAW"];
 

@@ -1,9 +1,18 @@
 "use client";
 
+import type { Metadata } from "next";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { getManifest } from "../../../../data/zoning";
 import type { ZoningItem } from "../../../../data/zoning/types";
+import { canonicalUrl } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Vancouver Zoning Codes | BC Property Lookup",
+  description:
+    "Browse Vancouver zoning districts with official map and bylaw references. Always verify with City of Vancouver sources.",
+  alternates: { canonical: canonicalUrl("/vancouver/zoning") }
+};
 
 const familyOrder = ["C", "FC", "I", "R", "RM", "RR", "RT"];
 
