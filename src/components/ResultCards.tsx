@@ -89,28 +89,6 @@ export function ResultCards({
         )}
       </Card>
 
-      <Card title="Parcel / PID">
-        {pidInfo?.pid || pidInfo?.parcelName ? (
-          <div className="space-y-1 text-sm text-gray-800">
-            {pidInfo.pid && <p className="font-semibold">PID: {pidInfo.pid}</p>}
-            {pidInfo.parcelName && <p>Parcel: {pidInfo.parcelName}</p>}
-            {pidInfo.parcelStatus && <p>Status: {pidInfo.parcelStatus}</p>}
-            <p className="text-xs text-gray-600">Source: Province of BC (ParcelMap BC)</p>
-          </div>
-        ) : (
-          <p className="text-sm text-gray-700">PID not returned for this location.</p>
-        )}
-        <p className="mt-2 text-xs text-gray-600">PID identifies the legal parcel; verify details on ParcelMap BC.</p>
-        <a
-          className="mt-2 inline-flex w-full justify-center rounded-lg border border-gray-200 px-3 py-2 text-sm hover:border-brand"
-          href="https://www2.gov.bc.ca/gov/content/industry/crown-land-water/land-use/crown-land/parcels/parcelmap-bc"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Open ParcelMap BC info
-        </a>
-      </Card>
-
       <Card title="Parcel details">
         {zoning?.raw ? (
           <div className="space-y-2 text-sm text-gray-800">
@@ -188,6 +166,14 @@ export function ResultCards({
               Parcel details are for orientation only. Verify legal description and zoning with the municipality.
             </p>
             <p className="text-xs text-gray-600">PID is the provincial parcel identifier; use it to open official parcel sources.</p>
+            <a
+              className="mt-2 inline-flex w-full justify-center rounded-lg border border-gray-200 px-3 py-2 text-sm hover:border-brand"
+              href="https://www2.gov.bc.ca/gov/content/industry/crown-land-water/land-use/crown-land/parcels/parcelmap-bc"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open ParcelMap BC info
+            </a>
           </div>
         ) : (
           <p className="text-sm text-gray-700">Parcel details not available for this lookup.</p>

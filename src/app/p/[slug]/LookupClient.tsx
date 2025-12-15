@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { ResultCards } from "@/components/ResultCards";
 import { MapView } from "@/components/MapView";
@@ -43,6 +42,7 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
   const [shareUrl, setShareUrl] = useState<string>("");
   const [cacheHit, setCacheHit] = useState(false);
   const [providerNotes, setProviderNotes] = useState<string[]>(initialSnapshot?.errors ?? []);
+  const [fallbackUsed, setFallbackUsed] = useState(false);
 
   const cacheKey = `snapshot:v1:${slug.trim().toLowerCase()}`;
 
@@ -69,6 +69,7 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
       setLoading(true);
       setError(null);
       setStatus(initialSnapshot ? "Using server result" : "Checking local cache…");
+      setFallbackUsed(false);
 
       if (typeof window !== "undefined") {
         const cached = window.localStorage.getItem(cacheKey);
@@ -78,6 +79,7 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
             setSnapshot(parsed.data);
             setCacheHit(true);
             setProviderNotes(parsed.data.errors ?? []);
+            setLoading(false);
           }
         }
       }
@@ -96,15 +98,17 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
         }
         setSnapshot(data);
         setProviderNotes(data.errors ?? []);
+        setFallbackUsed(false);
         saveRecent(data.address);
         if (typeof window !== "undefined") {
           window.localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
         }
-        } catch (err) {
-          // Fallback: run lookup client-side
-          try {
-            setStatus("Server unavailable, running fallback…");
-            const getAttr = (obj: unknown, key: string) => {
+      } catch (err) {
+        // Fallback: run lookup client-side
+        try {
+          setStatus("Server unavailable, running fallback…");
+          setFallbackUsed(true);
+          const getAttr = (obj: unknown, key: string) => {
             if (!obj || typeof obj !== "object") return undefined;
             const val = (obj as any)[key];
             return val === undefined || val === null ? undefined : val;
@@ -208,48 +212,65 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <p className="text-sm uppercase tracking-[0.2em] text-brand-dark">Property snapshot</p>
-          <h1 className="text-3xl font-bold text-gray-900">{snapshot?.address ?? slug}</h1>
-          {snapshot?.coords && (
-            <p className="text-sm text-gray-700">
-              Coordinates: {snapshot.coords.lat?.toFixed(5)}, {snapshot.coords.lon?.toFixed(5)}
-            </p>
-          )}
-        </div>
-        <div className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-sm font-medium text-gray-800">Lookup progress</p>
-            {cacheHit && <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-700">Cache hit</span>}
+      {/* Snapshot header */}
+      <div className="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.2em] text-brand-dark">Property snapshot</p>
+              <h1 className="text-3xl font-bold text-gray-900">{snapshot?.address ?? slug}</h1>
+              {snapshot?.coords && (
+                <p className="text-sm text-gray-700">
+                  Coordinates: {snapshot.coords.lat?.toFixed(5)}, {snapshot.coords.lon?.toFixed(5)}
+                </p>
+              )}
+            </div>
+            <div className="min-w-[260px] flex-1">
+              <SearchBox initialQuery={snapshot?.address ?? slug} />
+            </div>
           </div>
-          <div className="grid gap-2 md:grid-cols-4">
-            {[
-              { key: "cache", label: "Using cached/server data", active: status.includes("Using") },
-              { key: "server", label: "Fetching from server…", active: status.includes("Fetching") },
-              { key: "fallback", label: "Fallback lookup", active: status.includes("fallback") },
-              { key: "done", label: "Lookup complete", active: status.includes("complete") }
-            ].map((item) => (
-              <div
-                key={item.key}
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2 text-xs text-gray-600">
+              <span
                 className={clsx(
-                  "rounded-lg border px-2 py-2 text-xs",
-                  item.active ? "border-brand bg-brand/5 text-brand-dark" : "border-gray-200 text-gray-600"
+                  "h-2 w-2 rounded-full",
+                  fallbackUsed ? "bg-amber-500" : cacheHit ? "bg-emerald-500" : "bg-brand"
                 )}
-              >
-                {item.label}
+              />
+              <span>
+                {cacheHit
+                  ? "Using cached/server data"
+                  : fallbackUsed
+                  ? "Server unavailable, using fallback"
+                  : status}
+              </span>
+            </div>
+            {providerNotes.length > 0 && (
+              <div className="rounded-full bg-amber-50 px-3 py-1 text-xs text-amber-800">
+                Partial data (some sources timed out).{" "}
+                <button onClick={() => location.reload()} className="underline">
+                  Retry
+                </button>
               </div>
-            ))}
+            )}
           </div>
-          {status && <p className="text-xs text-gray-600">{status}</p>}
-          {providerNotes.length > 0 && (
-            <p className="text-xs text-amber-700">Sources with issues: {providerNotes.join("; ")}</p>
-          )}
+          <div className="flex flex-wrap gap-2 text-sm text-gray-800">
+            <button
+              className="rounded-lg bg-brand px-3 py-2 text-white shadow hover:bg-brand-dark"
+              onClick={() => copyText(summaryText(snapshot ?? undefined, shareUrl), "summary")}
+            >
+              Copy summary
+            </button>
+            {shareUrl && (
+              <button
+                className="rounded-lg border border-gray-200 px-3 py-2 hover:border-brand"
+                onClick={() => navigator.clipboard.writeText(shareUrl)}
+              >
+                Copy link
+              </button>
+            )}
+          </div>
         </div>
-      </div>
-
-      <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
-        <SearchBox initialQuery={snapshot?.address ?? slug} />
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
@@ -335,3 +356,17 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
     </div>
   );
 }
+// Build a concise shareable summary block
+const summaryText = (snap: Snapshot | undefined, share: string) => {
+  const coords = snap?.coords ? `${snap.coords.lat.toFixed(5)}, ${snap.coords.lon.toFixed(5)}` : "N/A";
+  const muni = snap?.municipality ?? "Unknown";
+  const alr = snap?.alr === null || snap?.alr === undefined ? "Unknown" : snap.alr ? "Yes" : "No";
+  const zoning = snap?.zoning?.code ?? snap?.zoning?.name ?? "N/A";
+  return `BC Property Snapshot
+Address: ${snap?.address ?? ""}
+Coordinates: ${coords}
+Municipality: ${muni}
+Zoning: ${zoning}
+Inside ALR: ${alr}
+Link: ${share}`;
+};
