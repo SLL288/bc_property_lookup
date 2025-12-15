@@ -5,6 +5,15 @@ import { useRouter } from "next/navigation";
 import { ResultCards } from "@/components/ResultCards";
 import { MapView } from "@/components/MapView";
 import { SearchBox } from "@/components/SearchBox";
+import { geocodeAddress } from "@/lib/geocode";
+import { fetchZoning } from "@/lib/zoning";
+import {
+  getPidByPoint,
+  getMunicipalityByPoint,
+  getRegionalDistrictByPoint,
+  getAlrStatusByPoint,
+  getFloodplainIndexByPoint
+} from "@/lib/bcgovProviders";
 
 type Snapshot = {
   address: string;
@@ -87,11 +96,65 @@ export default function LookupClient({ slug }: { slug: string }) {
           window.localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
         }
       } catch (err) {
-        if (typeof window !== "undefined") {
-          window.localStorage.removeItem(cacheKey);
-        }
-        if (!snapshot) {
-          setError(err instanceof Error ? err.message : "Lookup failed");
+        // Fallback: run lookup client-side
+        try {
+          setStatus("API failed, running client-side lookup...");
+          const geo = await geocodeAddress(slug);
+          const [pidResp, muniResp, rdResp, alrResp, floodResp, zoningResp] = await Promise.all([
+            getPidByPoint(geo.lat, geo.lon).catch(() => null),
+            getMunicipalityByPoint(geo.lat, geo.lon).catch(() => null),
+            getRegionalDistrictByPoint(geo.lat, geo.lon).catch(() => null),
+            getAlrStatusByPoint(geo.lat, geo.lon).catch(() => null),
+            getFloodplainIndexByPoint(geo.lat, geo.lon).catch(() => null),
+            fetchZoning({ lat: geo.lat, lon: geo.lon, municipality: undefined }).catch(() => null)
+          ]);
+          const pidAttrs = (pidResp as any)?.attributes ?? {};
+          const pidValue =
+            pidAttrs.PID_FORMATTED ??
+            pidAttrs.PID ??
+            pidAttrs.LTO_PID ??
+            (pidAttrs.PID_NUMBER ? String(pidAttrs.PID_NUMBER) : undefined);
+          const data: Snapshot = {
+            address: geo.address,
+            coords: { lat: geo.lat, lon: geo.lon },
+            pid: pidValue,
+            parcel: {
+              name: pidAttrs.PARCEL_NAME,
+              status: pidAttrs.PARCEL_STATUS,
+              class: pidAttrs.PARCEL_CLASS
+            },
+            municipality: muniResp?.attributes?.ADMIN_AREA_NAME ?? muniResp?.attributes?.NAME,
+            regionalDistrict: rdResp?.attributes?.ADMIN_AREA_NAME ?? rdResp?.attributes?.NAME,
+            alr: alrResp?.insideAlr ?? null,
+            alrStatus: alrResp?.status ?? undefined,
+            flood: floodResp
+              ? {
+                  hasMappedFloodplainStudy: floodResp.hasMappedFloodplainStudy,
+                  projectName: floodResp.projectName,
+                  reportUrl: floodResp.reportUrl
+                }
+              : null,
+            zoning: zoningResp,
+            errors: []
+          };
+          setSnapshot(data);
+          saveRecent(data.address);
+          if (typeof window !== "undefined") {
+            window.localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
+          }
+        } catch (fallbackErr) {
+          if (typeof window !== "undefined") {
+            window.localStorage.removeItem(cacheKey);
+          }
+          if (!snapshot) {
+            setError(
+              fallbackErr instanceof Error
+                ? fallbackErr.message
+                : err instanceof Error
+                ? err.message
+                : "Lookup failed"
+            );
+          }
         }
       } finally {
         setLoading(false);
