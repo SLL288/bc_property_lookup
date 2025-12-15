@@ -311,35 +311,20 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
                   Coordinates: {snapshot.coords.lat?.toFixed(5)}, {snapshot.coords.lon?.toFixed(5)}
                 </p>
               )}
+              <div className="mt-1 flex items-center gap-2 text-xs">
+                <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-gray-700">
+                  {providerNotes.length > 0 ? "Partial data" : "Data loaded"}
+                </span>
+                {providerNotes.length > 0 && (
+                  <span className="text-amber-700">
+                    Some sources delayed. Diagnostics has details.
+                  </span>
+                )}
+              </div>
             </div>
             <div className="min-w-[260px] flex-1">
               <SearchBox initialQuery={snapshot?.address ?? slug} />
             </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 text-xs text-gray-600">
-              <span
-                className={clsx(
-                  "h-2 w-2 rounded-full",
-                  fallbackUsed ? "bg-amber-500" : cacheHit ? "bg-emerald-500" : "bg-brand"
-                )}
-              />
-              <span>
-                {cacheHit
-                  ? "Using cached/server data"
-                  : fallbackUsed
-                  ? "Server unavailable, using fallback"
-                  : status}
-              </span>
-            </div>
-            {providerNotes.length > 0 && (
-              <div className="rounded-full bg-amber-50 px-3 py-1 text-xs text-amber-800">
-                Partial data (some sources timed out).{" "}
-                <button onClick={() => location.reload()} className="underline">
-                  Retry
-                </button>
-              </div>
-            )}
           </div>
           <div className="flex flex-wrap gap-2 text-sm text-gray-800">
             <button

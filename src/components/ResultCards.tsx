@@ -76,11 +76,33 @@ export function ResultCards({
   return (
     <div className="grid gap-4 md:grid-cols-2">
       <Card title="Snapshot">
-        {providerNotes && providerNotes.length > 0 && (
-          <div className="mb-3 rounded-lg border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
-            Partial data (some sources timed out). Expand Diagnostics for details.
-          </div>
-        )}
+        <div className="grid gap-2 text-sm text-gray-800">
+          <BadgeRow label="PID" value={parcelInfo?.pid ? "Available" : "Missing"} tone={parcelInfo?.pid ? "ok" : "muted"} />
+          <BadgeRow
+            label="Zoning"
+            value={zoning?.code || zoning?.name ? "Available" : "MVP not covered here"}
+            tone={zoning?.code || zoning?.name ? "ok" : "muted"}
+          />
+          <BadgeRow
+            label="ALR"
+            value={inAlr === null || inAlr === undefined ? "Unknown" : inAlr ? "Inside ALR" : "Not in ALR"}
+            tone={inAlr === null || inAlr === undefined ? "muted" : inAlr ? "ok" : "info"}
+          />
+          <BadgeRow
+            label="Floodplain index"
+            value={
+              floodplain
+                ? floodplain.hasMappedFloodplainStudy
+                  ? "Coverage present"
+                  : "No coverage"
+                : "Unknown"
+            }
+            tone={floodplain ? (floodplain.hasMappedFloodplainStudy ? "ok" : "info") : "muted"}
+          />
+          {providerNotes && providerNotes.length > 0 && (
+            <p className="text-xs text-amber-700">Partial data: some sources timed out. Check Diagnostics for details.</p>
+          )}
+        </div>
       </Card>
 
       <Card title="Jurisdiction">
@@ -204,7 +226,7 @@ export function ResultCards({
             </div>
           ) : (
             <p className="text-gray-700">
-              {zoning?.error ?? "Zoning lookup unavailable in MVP — verify on the official map."}
+              {zoning?.error ?? "Zoning lookup not covered in this MVP for this municipality. Use the official map link to verify."}
             </p>
           )}
           {zoningLink ? (
@@ -411,4 +433,27 @@ function getField(raw: Record<string, unknown> | undefined | null, keys: string[
     }
   }
   return undefined;
+}
+
+function BadgeRow({
+  label,
+  value,
+  tone
+}: {
+  label: string;
+  value: string;
+  tone: "ok" | "info" | "muted";
+}) {
+  const toneClasses =
+    tone === "ok"
+      ? "bg-emerald-50 text-emerald-800 border-emerald-100"
+      : tone === "info"
+      ? "bg-blue-50 text-blue-800 border-blue-100"
+      : "bg-gray-50 text-gray-700 border-gray-100";
+  return (
+    <div className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-xs">
+      <span className="text-gray-600">{label}</span>
+      <span className={clsx("rounded-full border px-2 py-0.5", toneClasses)}>{value}</span>
+    </div>
+  );
 }
