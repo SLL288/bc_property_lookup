@@ -187,38 +187,10 @@ export function ResultCards({
             <p className="text-xs text-gray-600">
               Parcel details are for orientation only. Verify legal description and zoning with the municipality.
             </p>
+            <p className="text-xs text-gray-600">PID is the provincial parcel identifier; use it to open official parcel sources.</p>
           </div>
         ) : (
           <p className="text-sm text-gray-700">Parcel details not available for this lookup.</p>
-        )}
-      </Card>
-      <Card title="Assessment (beta)">
-        {assessment?.available ? (
-          <div className="space-y-1 text-sm text-gray-800">
-            <p>Year: {assessment.year ?? "—"}</p>
-            <p>Total: {assessment.value ?? "—"}</p>
-            {assessment.land !== undefined && (
-              <p>Land: ${Math.round(assessment.land).toLocaleString()}</p>
-            )}
-            {assessment.improvement !== undefined && (
-              <p>Improvement: ${Math.round(assessment.improvement).toLocaleString()}</p>
-            )}
-            <p>Source: {assessment.class ?? "—"}</p>
-          </div>
-        ) : (
-          <div className="space-y-2 text-sm text-gray-700">
-            <p>{assessment?.message ?? "Assessment lookup unavailable in MVP — coming soon."}</p>
-          </div>
-        )}
-        {assessment?.link && (
-          <a
-            href={assessment.link}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-2 inline-flex rounded-lg bg-gray-900 px-3 py-2 text-white shadow hover:bg-gray-800"
-          >
-            View on BC Assessment
-          </a>
         )}
       </Card>
       <Card title="Zoning">
@@ -302,7 +274,39 @@ export function ResultCards({
               )}
             </details>
           )}
+          <p className="text-xs text-gray-600">
+            Zoning controls permitted uses and density. Comprehensive/“CD” zones are site-specific—always verify with the official bylaw.
+          </p>
         </div>
+      </Card>
+      <Card title="Assessment (beta)">
+        {assessment?.available ? (
+          <div className="space-y-1 text-sm text-gray-800">
+            <p>Year: {assessment.year ?? "—"}</p>
+            <p>Total: {assessment.value ?? "—"}</p>
+            {assessment.land !== undefined && (
+              <p>Land: ${Math.round(assessment.land).toLocaleString()}</p>
+            )}
+            {assessment.improvement !== undefined && (
+              <p>Improvement: ${Math.round(assessment.improvement).toLocaleString()}</p>
+            )}
+            <p>Source: {assessment.class ?? "—"}</p>
+          </div>
+        ) : (
+          <div className="space-y-2 text-sm text-gray-700">
+            <p>{assessment?.message ?? "Assessment lookup unavailable in MVP — coming soon."}</p>
+          </div>
+        )}
+        {assessment?.link && (
+          <a
+            href={assessment.link}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-2 inline-flex rounded-lg bg-gray-900 px-3 py-2 text-white shadow hover:bg-gray-800"
+          >
+            View on BC Assessment
+          </a>
+        )}
       </Card>
       <Card title="ALR Check">
         {inAlr === null ? (

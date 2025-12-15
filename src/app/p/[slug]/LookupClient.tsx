@@ -15,6 +15,7 @@ import {
   getAlrStatusByPoint,
   getFloodplainIndexByPoint
 } from "@/lib/bcgovProviders";
+import { getMunicipalLink } from "@/lib/municipalLinks";
 
 type Snapshot = {
   address: string;
@@ -32,15 +33,16 @@ type Snapshot = {
 
 const STORAGE_TTL = 1000 * 60 * 60 * 24 * 7;
 
-export default function LookupClient({ slug }: { slug: string }) {
+export default function LookupClient({ slug, initialSnapshot }: { slug: string; initialSnapshot?: Snapshot | null }) {
   const router = useRouter();
-  const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [snapshot, setSnapshot] = useState<Snapshot | null>(initialSnapshot ?? null);
+  const [loading, setLoading] = useState(!initialSnapshot);
   const [error, setError] = useState<string | null>(null);
-  const [status, setStatus] = useState<string>("Starting lookup...");
+  const [status, setStatus] = useState<string>(initialSnapshot ? "Using server result" : "Preparing lookup…");
   const [recent, setRecent] = useState<string[]>([]);
   const [shareUrl, setShareUrl] = useState<string>("");
   const [cacheHit, setCacheHit] = useState(false);
+  const [providerNotes, setProviderNotes] = useState<string[]>(initialSnapshot?.errors ?? []);
 
   const cacheKey = `snapshot:v1:${slug.trim().toLowerCase()}`;
 
@@ -66,7 +68,7 @@ export default function LookupClient({ slug }: { slug: string }) {
     const load = async () => {
       setLoading(true);
       setError(null);
-      setStatus("Checking local cache...");
+      setStatus(initialSnapshot ? "Using server result" : "Checking local cache…");
 
       if (typeof window !== "undefined") {
         const cached = window.localStorage.getItem(cacheKey);
@@ -75,12 +77,13 @@ export default function LookupClient({ slug }: { slug: string }) {
           if (Date.now() - parsed.ts < STORAGE_TTL) {
             setSnapshot(parsed.data);
             setCacheHit(true);
+            setProviderNotes(parsed.data.errors ?? []);
           }
         }
       }
 
       try {
-        setStatus("Calling lookup API...");
+        setStatus("Fetching from server…");
         const res = await fetch(`/api/lookup?address=${encodeURIComponent(slug)}`);
         const ctype = res.headers.get("content-type") || "";
         if (!ctype.includes("application/json")) {
@@ -92,15 +95,16 @@ export default function LookupClient({ slug }: { slug: string }) {
           throw new Error("Invalid lookup response");
         }
         setSnapshot(data);
+        setProviderNotes(data.errors ?? []);
         saveRecent(data.address);
         if (typeof window !== "undefined") {
           window.localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
         }
-      } catch (err) {
-        // Fallback: run lookup client-side
-        try {
-          setStatus("API failed, running client-side lookup...");
-          const getAttr = (obj: unknown, key: string) => {
+        } catch (err) {
+          // Fallback: run lookup client-side
+          try {
+            setStatus("Server unavailable, running fallback…");
+            const getAttr = (obj: unknown, key: string) => {
             if (!obj || typeof obj !== "object") return undefined;
             const val = (obj as any)[key];
             return val === undefined || val === null ? undefined : val;
@@ -144,6 +148,7 @@ export default function LookupClient({ slug }: { slug: string }) {
             errors: []
           };
           setSnapshot(data);
+          setProviderNotes([]);
           saveRecent(data.address);
           if (typeof window !== "undefined") {
             window.localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
@@ -161,10 +166,17 @@ export default function LookupClient({ slug }: { slug: string }) {
                 : "Lookup failed"
             );
           }
+          setProviderNotes([
+            fallbackErr instanceof Error
+              ? fallbackErr.message
+              : err instanceof Error
+              ? err.message
+              : "Lookup failed"
+          ]);
         }
       } finally {
         setLoading(false);
-        setStatus(cacheHit ? "Showing cached result" : "Lookup complete");
+        setStatus(cacheHit ? "Using cached result" : "Lookup complete");
       }
     };
     load();
@@ -211,33 +223,33 @@ export default function LookupClient({ slug }: { slug: string }) {
             <p className="text-sm font-medium text-gray-800">Lookup progress</p>
             {cacheHit && <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-700">Cache hit</span>}
           </div>
-          <div className="grid gap-2 md:grid-cols-5">
-            {["Starting lookup...", "Checking local cache...", "Calling lookup API...", "API failed, running client-side lookup...", "Lookup complete"].map(
-              (label) => {
-                const active = status === label || status.includes(label.split(" ")[0]);
-                return (
-                  <div
-                    key={label}
-                    className={clsx(
-                      "rounded-lg border px-2 py-2 text-xs",
-                      active ? "border-brand bg-brand/5 text-brand-dark" : "border-gray-200 text-gray-600"
-                    )}
-                  >
-                    {label.replace("...", "")}
-                  </div>
-                );
-              }
-            )}
+          <div className="grid gap-2 md:grid-cols-4">
+            {[
+              { key: "cache", label: "Using cached/server data", active: status.includes("Using") },
+              { key: "server", label: "Fetching from server…", active: status.includes("Fetching") },
+              { key: "fallback", label: "Fallback lookup", active: status.includes("fallback") },
+              { key: "done", label: "Lookup complete", active: status.includes("complete") }
+            ].map((item) => (
+              <div
+                key={item.key}
+                className={clsx(
+                  "rounded-lg border px-2 py-2 text-xs",
+                  item.active ? "border-brand bg-brand/5 text-brand-dark" : "border-gray-200 text-gray-600"
+                )}
+              >
+                {item.label}
+              </div>
+            ))}
           </div>
           {status && <p className="text-xs text-gray-600">{status}</p>}
+          {providerNotes.length > 0 && (
+            <p className="text-xs text-amber-700">Sources with issues: {providerNotes.join("; ")}</p>
+          )}
         </div>
       </div>
 
       <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
-        <p className="text-sm font-semibold text-gray-900">Search another address</p>
-        <div className="mt-2">
-          <SearchBox initialQuery={snapshot?.address ?? slug} />
-        </div>
+        <SearchBox initialQuery={snapshot?.address ?? slug} />
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
@@ -257,7 +269,7 @@ export default function LookupClient({ slug }: { slug: string }) {
                 ? { name: snapshot.municipality, region: snapshot.regionalDistrict ?? undefined }
                 : null
             }
-            zoningLink={null}
+            zoningLink={getMunicipalLink(snapshot.municipality ?? undefined)}
             zoning={snapshot.zoning}
             inAlr={snapshot.alr ?? null}
             alrProv={

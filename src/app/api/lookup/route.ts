@@ -13,6 +13,7 @@ export const runtime = "edge";
 
 const CACHE_SECONDS = 60 * 60 * 24 * 7; // 7 days
 const STALE_SECONDS = 60 * 60 * 24; // 1 day
+const REQUEST_TIMEOUT = 5000;
 
 function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -55,17 +56,25 @@ export async function GET(req: Request) {
       ? await geocodeAddress(address)
       : { address: `${latParam},${lonParam}`, lat: Number(latParam), lon: Number(lonParam) };
 
+    const errors: string[] = [];
+
+    const safe = async <T>(label: string, fn: () => Promise<T>) => {
+      try {
+        return await withTimeout(fn(), REQUEST_TIMEOUT, label);
+      } catch (err) {
+        errors.push(`${label}: ${err instanceof Error ? err.message : String(err)}`);
+        return null;
+      }
+    };
+
     const [pidResp, muniResp, rdResp, alrResp, floodResp, zoningResp] = await Promise.all([
-      withTimeout(getPidByPoint(geo.lat, geo.lon), 5000, "PID"),
-      withTimeout(getMunicipalityByPoint(geo.lat, geo.lon), 5000, "Municipality"),
-      withTimeout(getRegionalDistrictByPoint(geo.lat, geo.lon), 5000, "Regional district"),
-      withTimeout(getAlrStatusByPoint(geo.lat, geo.lon), 5000, "ALR"),
-      withTimeout(getFloodplainIndexByPoint(geo.lat, geo.lon), 5000, "Floodplain"),
-      withTimeout(fetchZoning({ lat: geo.lat, lon: geo.lon, municipality: undefined }), 5000, "Zoning")
-    ]).catch((err) => {
-      // If any promise rejects synchronously we will handle below; individual catches happen within withTimeout
-      throw err;
-    });
+      safe("PID", () => getPidByPoint(geo.lat, geo.lon)),
+      safe("Municipality", () => getMunicipalityByPoint(geo.lat, geo.lon)),
+      safe("Regional district", () => getRegionalDistrictByPoint(geo.lat, geo.lon)),
+      safe("ALR", () => getAlrStatusByPoint(geo.lat, geo.lon)),
+      safe("Floodplain", () => getFloodplainIndexByPoint(geo.lat, geo.lon)),
+      safe("Zoning", () => fetchZoning({ lat: geo.lat, lon: geo.lon, municipality: undefined }))
+    ]);
 
     const pidAttrs = (pidResp as any)?.attributes ?? {};
     const pidValue =
@@ -95,7 +104,7 @@ export async function GET(req: Request) {
           }
         : null,
       zoning: zoningResp ?? null,
-      errors: [] as string[]
+      errors
     };
 
     const res = NextResponse.json(snapshot, {

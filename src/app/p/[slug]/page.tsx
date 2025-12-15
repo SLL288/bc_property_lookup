@@ -11,6 +11,18 @@ const decodeSlug = (slug: string) => {
   }
 };
 
+async function tryServerLookup(decoded: string) {
+  try {
+    const res = await fetch(`/api/lookup?address=${encodeURIComponent(decoded)}`, {
+      next: { revalidate: 86400 }
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 export async function generateMetadata({
   params
 }: {
@@ -27,5 +39,6 @@ export async function generateMetadata({
 export default async function ResultPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const decoded = decodeSlug(slug);
-  return <LookupClient slug={decoded} />;
+  const initialSnapshot = await tryServerLookup(decoded);
+  return <LookupClient slug={decoded} initialSnapshot={initialSnapshot} />;
 }
