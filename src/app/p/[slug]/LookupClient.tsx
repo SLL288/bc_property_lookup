@@ -99,6 +99,11 @@ export default function LookupClient({ slug }: { slug: string }) {
         // Fallback: run lookup client-side
         try {
           setStatus("API failed, running client-side lookup...");
+          const getAttr = (obj: unknown, key: string) => {
+            if (!obj || typeof obj !== "object") return undefined;
+            const val = (obj as any)[key];
+            return val === undefined || val === null ? undefined : val;
+          };
           const geo = await geocodeAddress(slug);
           const [pidResp, muniResp, rdResp, alrResp, floodResp, zoningResp] = await Promise.all([
             getPidByPoint(geo.lat, geo.lon).catch(() => null),
@@ -123,8 +128,8 @@ export default function LookupClient({ slug }: { slug: string }) {
               status: pidAttrs.PARCEL_STATUS,
               class: pidAttrs.PARCEL_CLASS
             },
-            municipality: muniResp?.attributes?.ADMIN_AREA_NAME ?? muniResp?.attributes?.NAME,
-            regionalDistrict: rdResp?.attributes?.ADMIN_AREA_NAME ?? rdResp?.attributes?.NAME,
+            municipality: getAttr(muniResp?.attributes, "ADMIN_AREA_NAME") ?? getAttr(muniResp?.attributes, "NAME"),
+            regionalDistrict: getAttr(rdResp?.attributes, "ADMIN_AREA_NAME") ?? getAttr(rdResp?.attributes, "NAME"),
             alr: alrResp?.insideAlr ?? null,
             alrStatus: alrResp?.status ?? undefined,
             flood: floodResp
