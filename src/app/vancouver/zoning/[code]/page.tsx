@@ -9,8 +9,13 @@ export function generateStaticParams() {
   return VAN_ZONING.map((z) => ({ code: z.code }));
 }
 
-export function generateMetadata({ params }: { params: { code: string } }): Metadata {
-  const zoning = getZoning(params.code);
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ code: string }>;
+}): Promise<Metadata> {
+  const { code } = await params;
+  const zoning = getZoning(code);
   if (!zoning) {
     return {
       title: "Vancouver zoning",
@@ -23,8 +28,9 @@ export function generateMetadata({ params }: { params: { code: string } }): Meta
   };
 }
 
-export default function Page({ params }: { params: { code: string } }) {
-  const zoning = getZoning(params.code);
+export default async function Page({ params }: { params: Promise<{ code: string }> }) {
+  const { code } = await params;
+  const zoning = getZoning(code);
   if (!zoning) return notFound();
   return <ZoningTemplate zoning={zoning} related={VAN_ZONING} />;
 }
