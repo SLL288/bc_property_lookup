@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ZoningItem } from "../../../../../data/vancouverZoningManifest";
+import type { ZoningItem } from "@data/zoning/types";
 
 type Props = {
   zoning: ZoningItem;
