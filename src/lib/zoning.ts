@@ -41,6 +41,16 @@ const zoningSources: Record<string, ArcGisConfig> = {
     layerQueryUrls: ["https://citymap.portcoquitlam.ca/arcgis/rest/services/CityMap/MapServer/1/query"],
     outFields: ["ZONING", "ZONE_NAME"],
     label: "Port Coquitlam"
+  },
+  Delta: {
+    layerQueryUrls: ["https://mw1.delta.ca/arcgis/rest/services/DeltaMap/PropertyBasemap/MapServer/15/query"],
+    outFields: ["PID", "ROLLNUM", "PLANNO", "LOT", "CIVIC_ADDRESS", "ZONING", "PRCL_TYPE", "GRND_AREA", "ALR", "FLOODPLN"],
+    label: "Delta"
+  },
+  "Township of Langley": {
+    layerQueryUrls: ["https://mapsvr.tol.ca/arcgisext02/rest/services/GeoSource/DynamicServices_2023_10_31/MapServer/3/query"],
+    outFields: ["PID", "PLAN_NUMBER", "LOT", "Address", "CITY", "POSTAL_CODE", "Zoning", "ZoningDescr", "ZoningURL"],
+    label: "Township of Langley"
   }
 };
 

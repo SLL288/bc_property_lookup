@@ -6,7 +6,9 @@ const allowedHosts = [
   "geodata.coquitlam.ca",
   "citymap.portcoquitlam.ca",
   "gis.burnaby.ca",
-  "delivery.maps.gov.bc.ca"
+  "delivery.maps.gov.bc.ca",
+  "mapsvr.tol.ca",
+  "mw1.delta.ca"
 ];
 
 export const runtime = "edge";
