@@ -445,17 +445,3 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
     </div>
   );
 }
-// Build a concise shareable summary block
-const summaryText = (snap: Snapshot | undefined, share: string) => {
-  const coords = snap?.coords ? `${snap.coords.lat.toFixed(5)}, ${snap.coords.lon.toFixed(5)}` : "N/A";
-  const muni = snap?.municipality ?? "Unknown";
-  const alr = snap?.alr === null || snap?.alr === undefined ? "Unknown" : snap.alr ? "Yes" : "No";
-  const zoning = snap?.zoning?.code ?? snap?.zoning?.name ?? "N/A";
-  return `BC Property Snapshot
-Address: ${snap?.address ?? ""}
-Coordinates: ${coords}
-Municipality: ${muni}
-Zoning: ${zoning}
-Inside ALR: ${alr}
-Link: ${share}`;
-};
