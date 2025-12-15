@@ -32,6 +32,27 @@ type Snapshot = {
 };
 
 const STORAGE_TTL = 1000 * 60 * 60 * 24 * 7;
+const summaryText = (snap: Snapshot | undefined, share: string) => {
+  const coords = snap?.coords ? `${snap.coords.lat.toFixed(5)}, ${snap.coords.lon.toFixed(5)}` : "N/A";
+  const muni = snap?.municipality ?? "Unknown";
+  const alr = snap?.alr === null || snap?.alr === undefined ? "Unknown" : snap.alr ? "Yes" : "No";
+  const zoning = snap?.zoning?.code ?? snap?.zoning?.name ?? "N/A";
+  return `BC Property Snapshot
+Address: ${snap?.address ?? ""}
+Coordinates: ${coords}
+Municipality: ${muni}
+Zoning: ${zoning}
+Inside ALR: ${alr}
+Link: ${share}`;
+};
+
+const copyText = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    console.error("Copy failed", err);
+  }
+};
 
 export default function LookupClient({ slug, initialSnapshot }: { slug: string; initialSnapshot?: Snapshot | null }) {
   const router = useRouter();
@@ -258,14 +279,14 @@ export default function LookupClient({ slug, initialSnapshot }: { slug: string; 
           <div className="flex flex-wrap gap-2 text-sm text-gray-800">
             <button
               className="rounded-lg bg-brand px-3 py-2 text-white shadow hover:bg-brand-dark"
-              onClick={() => copyText(summaryText(snapshot ?? undefined, shareUrl), "summary")}
+              onClick={() => copyText(summaryText(snapshot ?? undefined, shareUrl))}
             >
               Copy summary
             </button>
             {shareUrl && (
               <button
                 className="rounded-lg border border-gray-200 px-3 py-2 hover:border-brand"
-                onClick={() => navigator.clipboard.writeText(shareUrl)}
+                onClick={() => copyText(shareUrl)}
               >
                 Copy link
               </button>

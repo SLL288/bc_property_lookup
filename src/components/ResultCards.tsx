@@ -313,7 +313,7 @@ export function ResultCards({
           rel="noreferrer"
           className="mt-3 inline-flex w-full justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium hover:border-brand"
         >
-          Open ALR map finder
+          Open Agricultural Land Reserve map
         </a>
         {alrProv && (
           <div className="mt-2 space-y-1 text-xs text-gray-700">
@@ -322,7 +322,9 @@ export function ResultCards({
             <p className="text-[11px] text-gray-500">Source: {alrProv.source ?? "Province of BC"}</p>
           </div>
         )}
-        <p className="mt-2 text-xs text-gray-600">Always verify with the ALC and the municipality for land-use constraints.</p>
+        <p className="mt-2 text-xs text-gray-600">
+          Always verify with the Agricultural Land Commission (ALC) and the municipality for land-use constraints.
+        </p>
       </Card>
       <Card title="Floodplain mapping (index)">
         {floodplain ? (
